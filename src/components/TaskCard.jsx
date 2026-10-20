@@ -38,6 +38,12 @@ export default function TaskCard({ task, members, onOpen, onHandOff }) {
         </button>
       </h3>
       {task.description && <p className="mt-1 line-clamp-2 text-sm text-slate-400">{task.description}</p>}
+      {(task.context || task.prompts.length > 0) && (
+        <p className="mt-2 font-mono text-xs text-violet-300">
+          {task.contextTool ? `Context · ${task.contextTool}` : 'Context'}
+          {task.prompts.length > 0 && ` · ${task.prompts.length} prompt${task.prompts.length > 1 ? 's' : ''}`}
+        </p>
+      )}
 
       <div className="mt-3 flex items-center justify-between gap-2 text-xs text-slate-400">
         {/* M7: owner badge */}
