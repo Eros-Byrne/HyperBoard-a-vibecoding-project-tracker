@@ -1,11 +1,11 @@
 import { LogOut, Plus } from 'lucide-react';
 import { TEAM_COLORS, teamColor } from '../model.js';
-import { btnGhost } from '../ui.js';
+import { btnGhost, btnPrimary } from '../ui.js';
 import Wordmark from './Wordmark.jsx';
 
 const select = 'rounded-md border border-slate-700 bg-surface-page px-2 py-1.5 text-sm text-slate-100';
 
-export default function Header({ team, projects, project, user, onSelectProject, onNewProject, onChangeColor, onLogout }) {
+export default function Header({ team, projects, project, user, onSelectProject, onNewProject, onChangeColor, onLogout, onNewTask }) {
   return (
     <header className="border-b border-slate-800 bg-surface-page">
       {/* Team colour stripe (FR 1.3) */}
@@ -42,6 +42,9 @@ export default function Header({ team, projects, project, user, onSelectProject,
         </div>
 
         <div className="ml-auto flex items-center gap-3">
+          <button type="button" className={btnPrimary} onClick={onNewTask}>
+            <Plus size={16} aria-hidden="true" /> New Task
+          </button>
           <span className="text-sm text-slate-400">
             Signed in as <span className="text-slate-100">{user}</span>
           </span>

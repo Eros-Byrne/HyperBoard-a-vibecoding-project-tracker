@@ -1,7 +1,14 @@
-export default function TaskCard({ task }) {
+export default function TaskCard({ task, onOpen }) {
   return (
-    <article className="rounded-md border border-slate-700 bg-surface-card p-3 hover:brightness-110">
-      <h3 className="text-sm font-medium text-slate-50">{task.title}</h3>
+    <article
+      onClick={() => onOpen(task)}
+      className="cursor-pointer rounded-md border border-slate-700 bg-surface-card p-3 hover:brightness-110"
+    >
+      <h3 className="text-sm font-medium text-slate-50">
+        <button type="button" className="text-left hover:underline" onClick={(e) => { e.stopPropagation(); onOpen(task); }}>
+          {task.title}
+        </button>
+      </h3>
       {task.description && <p className="mt-1 line-clamp-2 text-sm text-slate-400">{task.description}</p>}
       <div className="mt-3 flex items-center justify-between text-xs text-slate-400">
         <span className="font-mono">{task.type}</span>

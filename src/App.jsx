@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   STORAGE_KEYS,
   SEED_TEAMS,
@@ -7,11 +8,13 @@ import {
   SEED_SESSION,
   newTeam,
   newProject,
+  newTask,
 } from './model.js';
 import { useLocalStorage } from './useLocalStorage.js';
 import TeamGate from './components/TeamGate.jsx';
 import Header from './components/Header.jsx';
 import Board from './components/Board.jsx';
+import TaskModal from './components/TaskModal.jsx';
 
 export default function App() {
   const [teams, setTeams] = useLocalStorage(STORAGE_KEYS.teams, SEED_TEAMS);
@@ -19,6 +22,7 @@ export default function App() {
   const [milestones, setMilestones] = useLocalStorage(STORAGE_KEYS.milestones, SEED_MILESTONES);
   const [tasks, setTasks] = useLocalStorage(STORAGE_KEYS.tasks, SEED_TASKS);
   const [session, setSession] = useLocalStorage(STORAGE_KEYS.session, SEED_SESSION);
+  const [editing, setEditing] = useState(null); // { task, isNew } while the modal is open
 
   const team = teams.find((t) => t.id === session?.teamId);
 
@@ -62,6 +66,17 @@ export default function App() {
     setSession({ ...session, projectId: p.id });
   }
 
+  function saveTask(task) {
+    const exists = tasks.some((t) => t.id === task.id);
+    setTasks(exists ? tasks.map((t) => (t.id === task.id ? task : t)) : [...tasks, task]);
+    setEditing(null);
+  }
+
+  function deleteTask(id) {
+    setTasks(tasks.filter((t) => t.id !== id));
+    setEditing(null);
+  }
+
   return (
     <div className="min-h-full">
       <Header
@@ -73,10 +88,22 @@ export default function App() {
         onNewProject={addProject}
         onChangeColor={(color) => setTeams(teams.map((t) => (t.id === team.id ? { ...t, color } : t)))}
         onLogout={() => setSession(null)}
+        onNewTask={() => setEditing({ task: newTask({ projectId: project.id, assignee: session.user }), isNew: true })}
       />
       <main className="space-y-6 p-6">
-        <Board tasks={projectTasks} />
+        <Board tasks={projectTasks} onOpen={(task) => setEditing({ task, isNew: false })} />
       </main>
+
+      {editing && (
+        <TaskModal
+          task={editing.task}
+          isNew={editing.isNew}
+          members={team.members}
+          onSave={saveTask}
+          onDelete={deleteTask}
+          onClose={() => setEditing(null)}
+        />
+      )}
     </div>
   );
 }
