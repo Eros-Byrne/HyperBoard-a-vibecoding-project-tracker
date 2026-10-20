@@ -91,6 +91,9 @@ export const TASK_TYPES = [
 
 export const AI_TOOLS = ['Claude', 'ChatGPT', 'Cursor', 'Lovable', 'Replit', 'Other'];
 
+// M9: starter headings for a paste-ready Context briefing.
+export const CONTEXT_TEMPLATE = ['**Goal:** ', '**Done so far:** ', '**Next step:** ', '**Gotchas:** '].join('\n');
+
 // Preset team colours. All are 400-level shades with 5.9:1+ contrast on surface-page (WCAG AA).
 export const TEAM_COLORS = [
   { id: 'indigo',  label: 'Indigo',  hex: '#818CF8' },

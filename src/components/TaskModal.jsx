@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Plus, Trash2, X } from 'lucide-react';
-import { STAGES, TASK_TYPES, AI_TOOLS, uid } from '../model.js';
+import { FileText, Plus, Trash2, X } from 'lucide-react';
+import { STAGES, TASK_TYPES, AI_TOOLS, CONTEXT_TEMPLATE, uid } from '../model.js';
 import { btnPrimary, btnGhost, btnDanger, input, label } from '../ui.js';
 import Modal from './Modal.jsx';
 
@@ -108,10 +108,22 @@ export default function TaskModal({ task, isNew, members, milestones, onSave, on
             </select>
           </div>
           <div>
-            <label htmlFor="task-context" className={label}>Context</label>
+            <div className="flex items-end justify-between">
+              <label htmlFor="task-context" className={label}>Context</label>
+              {/* Adds the template below any existing text, so nothing is overwritten */}
+              <button
+                type="button"
+                className="mb-1 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-violet-300 hover:text-white"
+                onClick={() =>
+                  setDraft({ ...draft, context: draft.context.trim() ? `${draft.context.trimEnd()}\n\n${CONTEXT_TEMPLATE}` : CONTEXT_TEMPLATE })
+                }
+              >
+                <FileText size={12} aria-hidden="true" /> Insert briefing template
+              </button>
+            </div>
             <textarea
               id="task-context"
-              rows={4}
+              rows={6}
               className={`${input} font-mono`}
               placeholder="What the next person (or AI) needs to know: goal, decisions so far, what's left."
               value={draft.context}
