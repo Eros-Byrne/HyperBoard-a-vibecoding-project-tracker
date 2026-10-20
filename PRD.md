@@ -164,4 +164,60 @@ The hackathon is "done" when all 13 milestone tags are pushed to your repo and v
 
 ---
 
+## 14. Functional Requirements 
+1. Team & Workspace Management
+
+    FR 1.1 Team Creation & Joining: Users must be able to create new teams, invite members, and join existing teams.
+
+    FR 1.2 Dedicated Team Workspaces: A user must be able to log into a specific team's workspace to collaborate on projects dedicated solely to that group.
+
+    FR 1.3 Team Customization (Phase 1): Users must be able to color-code their team workspace using a pre-set list of colors.
+
+    FR 1.4 Customization Extensibility (Future-proofing): The system must be designed to support future custom configuration options, such as HEX code color selection and team photo/avatar uploads.
+
+2. Task Management (Kanban Board)
+
+    FR 2.1 Kanban Interface: The application must feature a Kanban board where users can create, edit, move, and delete tasks across customizable columns (e.g., To Do, In Progress, Done).
+
+    FR 2.2 Milestone Tracking: Users must be able to define, track, and attach tasks to key project milestones over time.
+
+    FR 2.3 General Project Information: Each project must have a dedicated space to log and pin important high-level information, architecture notes, and goals.
+
+3. "Vibe-Coding" Specific Features
+
+    FR 3.1 Prompt & Result Logging: Within tasks or project notes, users must have dedicated fields or sections to log successful AI prompts and their corresponding generated results/code snippets for easy team reference.
+
+4. Support & Feedback
+
+    FR 4.1 Contact Us Module: The application must include a built-in "Contact Us" or support page allowing users to report bugs, submit issues, or request help directly from the workspace.
+
+## 15. Non-Functional Requirements (NFRs) 
+These requirements define how the system performs, its usability, and its structural qualities.
+
+1. Accessibility (Crucial)
+
+    NFR 1.1 Standards Compliance: The application must meet WCAG (Web Content Accessibility Guidelines) AA standards to ensure it is usable by developers with disabilities.
+
+    NFR 1.2 Navigation: The application must be fully navigable via keyboard, with clear focus states for all interactive elements on the Kanban board.
+
+    NFR 1.3 Screen Reader Compatibility: UI elements, especially drag-and-drop features on the Kanban board, must have appropriate ARIA labels for screen reader support.
+
+2. Usability & User Experience (UX)
+
+    NFR 2.1 Target Audience Flexibility: The interface must be highly intuitive, minimizing the learning curve for junior developers while providing the efficiency and depth required by expert developers.
+
+    NFR 2.2 Design Justification: Since no formal design sheet exists, all UI/UX decisions (e.g., color contrast, button placement, typography) must be documented with justifications proving they enhance workflow and accessibility.
+
+3. Performance & Collaboration
+
+    NFR 3.1 Real-Time Syncing: Because the app is designed for team collaboration, updates to the Kanban board (moving a card, adding a prompt) should reflect in real-time or near-real-time for all other team members currently viewing the board.
+
+    NFR 3.2 Responsiveness: The UI must respond quickly to interactions (like dragging tasks) to keep up with the fast-paced nature of "vibe-coding."
+
+4. Security & Privacy
+
+    NFR 4.1 Data Isolation: Data, tasks, and logged prompts must be strictly isolated between teams. A user logged into Team A must not be able to access Team B's data unless explicitly invited.
+
+
+
 *PRD version: hackathon-starter v1 · maintained by Prof. Dr. Ignacio Alvarez*
