@@ -46,7 +46,7 @@ git tag <tag-name>
 git push --tags
 ```
 
-Replace `<tag-name>` with the tag for the milestone you just finished — see the table below. Tag names are lowercase, hyphenated, exact.
+Replace `<tag-name>` with the tag for the milestone you just finished. Tag names are lowercase, hyphenated, exact.
 
 | # | Tag | What it means |
 |---|---|---|
