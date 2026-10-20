@@ -5,7 +5,7 @@ import { btnPrimary, btnGhost, btnDanger, input, label } from '../ui.js';
 import Modal from './Modal.jsx';
 
 /** One modal for both "New Task" and editing an existing task. */
-export default function TaskModal({ task, isNew, members, onSave, onDelete, onClose }) {
+export default function TaskModal({ task, isNew, members, milestones, onSave, onDelete, onClose }) {
   const [draft, setDraft] = useState(task);
   const set = (field) => (e) => setDraft({ ...draft, [field]: e.target.value });
 
@@ -30,6 +30,7 @@ export default function TaskModal({ task, isNew, members, onSave, onDelete, onCl
       ...draft,
       title: draft.title.trim(),
       dueDate: draft.dueDate || null,
+      milestoneId: draft.milestoneId || null,
       contextTool: draft.contextTool || null,
       contextUpdatedAt: contextChanged ? new Date().toISOString() : draft.contextUpdatedAt,
       prompts: draft.prompts.filter((p) => p.prompt.trim() || p.result.trim()),
@@ -82,6 +83,15 @@ export default function TaskModal({ task, isNew, members, onSave, onDelete, onCl
           <div>
             <label htmlFor="task-due" className={label}>Due date</label>
             <input id="task-due" type="date" className={`${input} [color-scheme:dark]`} value={draft.dueDate ?? ''} onChange={set('dueDate')} />
+          </div>
+          <div className="col-span-2">
+            <label htmlFor="task-milestone" className={label}>Milestone</label>
+            <select id="task-milestone" className={input} value={draft.milestoneId ?? ''} onChange={set('milestoneId')}>
+              <option value="">None</option>
+              {milestones.map((m) => (
+                <option key={m.id} value={m.id}>{m.title}</option>
+              ))}
+            </select>
           </div>
         </div>
 

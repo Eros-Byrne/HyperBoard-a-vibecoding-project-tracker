@@ -17,6 +17,8 @@ import Header from './components/Header.jsx';
 import Board from './components/Board.jsx';
 import TaskModal from './components/TaskModal.jsx';
 import Toast from './components/Toast.jsx';
+import AnchorBoard from './components/AnchorBoard.jsx';
+import ProjectPanel from './components/ProjectPanel.jsx';
 
 export default function App() {
   const [teams, setTeams] = useLocalStorage(STORAGE_KEYS.teams, SEED_TEAMS);
@@ -62,6 +64,21 @@ export default function App() {
   const teamProjects = projects.filter((p) => p.teamId === team.id);
   const project = teamProjects.find((p) => p.id === session.projectId) ?? teamProjects[0];
   const projectTasks = tasks.filter((t) => t.projectId === project.id);
+  const projectMilestones = milestones.filter((m) => m.projectId === project.id);
+
+  function updateProject(changes) {
+    setProjects(projects.map((p) => (p.id === project.id ? { ...p, ...changes } : p)));
+  }
+
+  function setProjectMilestones(next) {
+    // Detach tasks from any milestone that was deleted.
+    const kept = new Set(next.map((m) => m.id));
+    const removed = projectMilestones.filter((m) => !kept.has(m.id)).map((m) => m.id);
+    if (removed.length) {
+      setTasks(tasks.map((t) => (removed.includes(t.milestoneId) ? { ...t, milestoneId: null } : t)));
+    }
+    setMilestones([...milestones.filter((m) => m.projectId !== project.id), ...next]);
+  }
 
   function addProject() {
     const name = window.prompt('Project name')?.trim();
@@ -93,7 +110,8 @@ export default function App() {
 
   async function copyPrompt(task) {
     try {
-      await navigator.clipboard.writeText(taskToPrompt(task, { projectName: project.name }));
+      const milestoneTitle = projectMilestones.find((m) => m.id === task.milestoneId)?.title;
+      await navigator.clipboard.writeText(taskToPrompt(task, { projectName: project.name, milestoneTitle }));
       notify('Prompt copied. Ready to paste.');
     } catch {
       notify("Couldn't copy. Check your browser's clipboard permission.");
@@ -122,6 +140,14 @@ export default function App() {
         onAddMember={addMember}
       />
       <main className="space-y-6 p-6">
+        <AnchorBoard anchors={project.anchors} onChange={(anchors) => updateProject({ anchors })} />
+        <ProjectPanel
+          project={project}
+          milestones={projectMilestones}
+          tasks={projectTasks}
+          onNotesChange={(notes) => updateProject({ notes })}
+          onMilestonesChange={setProjectMilestones}
+        />
         <Board
           tasks={projectTasks}
           members={team.members}
@@ -138,6 +164,7 @@ export default function App() {
           task={editing.task}
           isNew={editing.isNew}
           members={team.members}
+          milestones={projectMilestones}
           onSave={saveTask}
           onDelete={deleteTask}
           onClose={() => setEditing(null)}
