@@ -1,7 +1,7 @@
 import { STAGES } from '../model.js';
 import TaskCard from './TaskCard.jsx';
 
-export default function Board({ tasks, members, onOpen, onHandOff }) {
+export default function Board({ tasks, members, onOpen, onHandOff, onCopy }) {
   return (
     <div className="grid grid-cols-4 gap-4">
       {STAGES.map((stage) => {
@@ -22,7 +22,7 @@ export default function Board({ tasks, members, onOpen, onHandOff }) {
               <ul className="space-y-3">
                 {columnTasks.map((task) => (
                   <li key={task.id}>
-                    <TaskCard task={task} members={members} onOpen={onOpen} onHandOff={onHandOff} />
+                    <TaskCard task={task} members={members} onOpen={onOpen} onHandOff={onHandOff} onCopy={onCopy} />
                   </li>
                 ))}
               </ul>

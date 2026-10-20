@@ -1,4 +1,4 @@
-import { Bug, Sparkles, Clock } from 'lucide-react';
+import { Bug, Sparkles, Clock, ClipboardCopy } from 'lucide-react';
 import { dueState } from '../model.js';
 
 // M6: accent stripe + icon + label, so type is never shown by colour alone.
@@ -19,7 +19,7 @@ const initials = (name) => name.split(/\s+/).map((w) => w[0]).join('').slice(0, 
 
 const miniSelect = 'rounded border border-slate-700 bg-surface-page px-1.5 py-1 text-xs text-slate-200';
 
-export default function TaskCard({ task, members, onOpen, onHandOff }) {
+export default function TaskCard({ task, members, onOpen, onHandOff, onCopy }) {
   const type = TYPE_STYLE[task.type];
   const others = members.filter((m) => m !== task.assignee);
   const due = DUE_STYLE[dueState(task)];
@@ -78,6 +78,14 @@ export default function TaskCard({ task, members, onOpen, onHandOff }) {
             <option key={m}>{m}</option>
           ))}
         </select>
+        <button
+          type="button"
+          className="ml-auto inline-flex items-center gap-1 rounded border border-slate-700 px-1.5 py-1 text-xs text-slate-200 hover:border-brand-accent hover:text-white"
+          aria-label={`Copy "${task.title}" as prompt context`}
+          onClick={() => onCopy(task)}
+        >
+          <ClipboardCopy size={12} aria-hidden="true" /> Copy as Prompt
+        </button>
       </div>
     </article>
   );

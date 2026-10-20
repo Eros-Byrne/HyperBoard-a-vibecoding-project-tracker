@@ -140,6 +140,40 @@ export function dueState(task) {
   return 'safe';
 }
 
+/** M10: serialize a task as a Markdown briefing to paste into an AI chat. */
+export function taskToPrompt(task, { projectName, milestoneTitle } = {}) {
+  const stage = STAGES.find((s) => s.id === task.status)?.label ?? task.status;
+  const lines = [
+    `# Task: ${task.title}`,
+    '',
+    [
+      `**Type:** ${task.type}`,
+      `**Status:** ${stage}`,
+      `**Assignee:** ${task.assignee}`,
+      `**Due:** ${task.dueDate ?? 'none'}`,
+    ].join(' · '),
+  ];
+  if (projectName) lines.push(`**Project:** ${projectName}${milestoneTitle ? ` · **Milestone:** ${milestoneTitle}` : ''}`);
+  lines.push('', '## Description', task.description || '_No description._');
+
+  if (task.context) {
+    const meta = [task.contextTool && `via ${task.contextTool}`, task.contextUpdatedAt && `updated ${new Date(task.contextUpdatedAt).toLocaleString()}`]
+      .filter(Boolean)
+      .join(', ');
+    lines.push('', `## Context${meta ? ` (${meta})` : ''}`, task.context);
+  }
+
+  if (task.prompts.length) {
+    lines.push('', '## Prompt log');
+    task.prompts.forEach((p, i) => {
+      lines.push('', `### ${i + 1}. ${p.tool}`, '**Prompt:**', p.prompt || '_empty_', '', '**Result:**', '```', p.result, '```');
+    });
+  }
+
+  lines.push('', '---', 'Continue this task from the context above.');
+  return lines.join('\n');
+}
+
 export function teamColor(team) {
   return (TEAM_COLORS.find((c) => c.id === team?.color) ?? TEAM_COLORS[0]).hex;
 }

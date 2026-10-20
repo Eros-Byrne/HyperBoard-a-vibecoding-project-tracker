@@ -9,6 +9,7 @@ import {
   newTeam,
   newProject,
   newTask,
+  taskToPrompt,
 } from './model.js';
 import { useLocalStorage } from './useLocalStorage.js';
 import TeamGate from './components/TeamGate.jsx';
@@ -90,6 +91,15 @@ export default function App() {
     notify(`Task assigned to ${name}.`);
   }
 
+  async function copyPrompt(task) {
+    try {
+      await navigator.clipboard.writeText(taskToPrompt(task, { projectName: project.name }));
+      notify('Prompt copied. Ready to paste.');
+    } catch {
+      notify("Couldn't copy. Check your browser's clipboard permission.");
+    }
+  }
+
   function addMember() {
     const name = window.prompt(`Add a teammate to ${team.name}.\nThey can also join with code ${team.code}.\n\nName:`)?.trim();
     if (!name || team.members.includes(name)) return;
@@ -117,6 +127,7 @@ export default function App() {
           members={team.members}
           onOpen={(task) => setEditing({ task, isNew: false })}
           onHandOff={handOff}
+          onCopy={copyPrompt}
         />
       </main>
 
