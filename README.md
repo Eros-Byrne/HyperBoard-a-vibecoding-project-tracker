@@ -37,7 +37,7 @@ Open the URL Vite prints (typically `http://localhost:5173`). You should see a p
 
 ## Milestone workflow
 
-Every milestone ends with a git tag push. The Hackathon Portal dashboard watches your tags and updates the scoreboard in near real time.
+Every milestone ends with a git tag push. Hackathon Portal dashboard watches your tags and updates the scoreboard in near real time.
 
 ```bash
 git add .
