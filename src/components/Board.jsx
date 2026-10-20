@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { STAGES } from '../model.js';
 import TaskCard from './TaskCard.jsx';
 
-export default function Board({ tasks, members, onOpen, onHandOff, onCopy }) {
+export default function Board({ tasks, members, onOpen, onHandOff, onCopy, onMove }) {
+  const [dropTarget, setDropTarget] = useState(null);
+
   return (
     <div className="grid grid-cols-4 gap-4">
       {STAGES.map((stage) => {
@@ -10,7 +13,19 @@ export default function Board({ tasks, members, onOpen, onHandOff, onCopy }) {
           <section
             key={stage.id}
             aria-labelledby={`col-${stage.id}`}
-            className="flex min-h-[16rem] flex-col rounded-lg bg-slate-900/60 p-3"
+            onDragOver={(e) => {
+              e.preventDefault();
+              setDropTarget(stage.id);
+            }}
+            onDragLeave={(e) => !e.currentTarget.contains(e.relatedTarget) && setDropTarget(null)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setDropTarget(null);
+              onMove(e.dataTransfer.getData('text/plain'), stage.id);
+            }}
+            className={`flex min-h-[16rem] flex-col rounded-lg bg-slate-900/60 p-3 ring-2 ${
+              dropTarget === stage.id ? 'ring-brand-primary' : 'ring-transparent'
+            }`}
           >
             <h2 id={`col-${stage.id}`} className="mb-3 flex items-center justify-between text-base font-semibold uppercase tracking-wide text-slate-300">
               {stage.label}
@@ -22,7 +37,7 @@ export default function Board({ tasks, members, onOpen, onHandOff, onCopy }) {
               <ul className="space-y-3">
                 {columnTasks.map((task) => (
                   <li key={task.id}>
-                    <TaskCard task={task} members={members} onOpen={onOpen} onHandOff={onHandOff} onCopy={onCopy} />
+                    <TaskCard task={task} members={members} onOpen={onOpen} onHandOff={onHandOff} onCopy={onCopy} onMove={onMove} />
                   </li>
                 ))}
               </ul>

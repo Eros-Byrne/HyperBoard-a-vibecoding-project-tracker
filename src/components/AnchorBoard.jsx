@@ -76,7 +76,7 @@ function AnchorForm({ anchor, onSave, onCancel }) {
       />
       <div className="flex justify-end gap-2 text-xs">
         <button type="button" onClick={onCancel} className="rounded px-2 py-1 text-slate-300 hover:text-white">Cancel</button>
-        <button type="submit" className="rounded bg-brand-primary px-2 py-1 text-white hover:bg-brand-accent">Save</button>
+        <button type="submit" className="rounded bg-indigo-600 px-2 py-1 text-white hover:bg-violet-600">Save</button>
       </div>
     </form>
   );

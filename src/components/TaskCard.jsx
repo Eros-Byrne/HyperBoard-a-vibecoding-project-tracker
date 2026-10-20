@@ -1,5 +1,5 @@
-import { Bug, Sparkles, Clock, ClipboardCopy } from 'lucide-react';
-import { dueState } from '../model.js';
+import { Bug, Sparkles, Clock, ClipboardCopy, GripVertical } from 'lucide-react';
+import { dueState, STAGES } from '../model.js';
 
 // M6: accent stripe + icon + label, so type is never shown by colour alone.
 const TYPE_STYLE = {
@@ -19,19 +19,25 @@ const initials = (name) => name.split(/\s+/).map((w) => w[0]).join('').slice(0, 
 
 const miniSelect = 'rounded border border-slate-700 bg-surface-page px-1.5 py-1 text-xs text-slate-200';
 
-export default function TaskCard({ task, members, onOpen, onHandOff, onCopy }) {
+export default function TaskCard({ task, members, onOpen, onHandOff, onCopy, onMove }) {
   const type = TYPE_STYLE[task.type];
   const others = members.filter((m) => m !== task.assignee);
   const due = DUE_STYLE[dueState(task)];
 
   return (
     <article
+      draggable
+      onDragStart={(e) => e.dataTransfer.setData('text/plain', task.id)}
       onClick={() => onOpen(task)}
-      className={`cursor-pointer rounded-md border border-l-4 ${due?.border ?? 'border-slate-700'} ${type.stripe} bg-surface-card p-3 hover:brightness-110`}
+      className={`group cursor-pointer rounded-md border border-l-4 ${due?.border ?? 'border-slate-700'} ${type.stripe} bg-surface-card p-3 hover:brightness-110`}
     >
-      <span className={`mb-2 inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-xs ${type.badge}`}>
-        <type.Icon size={12} aria-hidden="true" /> {type.label}
-      </span>
+      <div className="mb-2 flex items-center justify-between">
+        <span className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-xs ${type.badge}`}>
+          <type.Icon size={12} aria-hidden="true" /> {type.label}
+        </span>
+        {/* 6-dot drag affordance (DESIGN.md §4); the Move dropdown below is the keyboard alternative */}
+        <GripVertical size={16} aria-hidden="true" className="cursor-grab text-slate-500 opacity-0 group-hover:opacity-100" />
+      </div>
       <h3 className="text-sm font-medium text-slate-50">
         <button type="button" className="text-left hover:underline" onClick={(e) => { e.stopPropagation(); onOpen(task); }}>
           {task.title}
@@ -65,6 +71,16 @@ export default function TaskCard({ task, members, onOpen, onHandOff, onCopy }) {
 
       {/* Controls don't open the modal when used */}
       <div className="mt-3 flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
+        <select
+          className={miniSelect}
+          aria-label={`Move "${task.title}" to column`}
+          value={task.status}
+          onChange={(e) => onMove(task.id, e.target.value)}
+        >
+          {STAGES.map((s) => (
+            <option key={s.id} value={s.id}>{s.label}</option>
+          ))}
+        </select>
         <select
           className={miniSelect}
           aria-label={`Hand off "${task.title}" to`}

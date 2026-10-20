@@ -91,7 +91,7 @@ export const TASK_TYPES = [
 
 export const AI_TOOLS = ['Claude', 'ChatGPT', 'Cursor', 'Lovable', 'Replit', 'Other'];
 
-// Preset team colours. All are 400-level shades with 7:1+ contrast on surface-page.
+// Preset team colours. All are 400-level shades with 5.9:1+ contrast on surface-page (WCAG AA).
 export const TEAM_COLORS = [
   { id: 'indigo',  label: 'Indigo',  hex: '#818CF8' },
   { id: 'emerald', label: 'Emerald', hex: '#34D399' },

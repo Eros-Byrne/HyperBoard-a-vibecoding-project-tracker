@@ -19,6 +19,7 @@ import TaskModal from './components/TaskModal.jsx';
 import Toast from './components/Toast.jsx';
 import AnchorBoard from './components/AnchorBoard.jsx';
 import ProjectPanel from './components/ProjectPanel.jsx';
+import ContactModal from './components/ContactModal.jsx';
 
 export default function App() {
   const [teams, setTeams] = useLocalStorage(STORAGE_KEYS.teams, SEED_TEAMS);
@@ -28,6 +29,7 @@ export default function App() {
   const [session, setSession] = useLocalStorage(STORAGE_KEYS.session, SEED_SESSION);
   const [editing, setEditing] = useState(null); // { task, isNew } while the modal is open
   const [toast, setToast] = useState(null); // { id, message }
+  const [contactOpen, setContactOpen] = useState(false);
 
   const notify = (message) => setToast({ id: Date.now(), message });
 
@@ -138,6 +140,7 @@ export default function App() {
         onLogout={() => setSession(null)}
         onNewTask={() => setEditing({ task: newTask({ projectId: project.id, assignee: session.user }), isNew: true })}
         onAddMember={addMember}
+        onContact={() => setContactOpen(true)}
       />
       <main className="space-y-6 p-6">
         <AnchorBoard anchors={project.anchors} onChange={(anchors) => updateProject({ anchors })} />
@@ -154,6 +157,7 @@ export default function App() {
           onOpen={(task) => setEditing({ task, isNew: false })}
           onHandOff={handOff}
           onCopy={copyPrompt}
+          onMove={(id, status) => updateTask(id, { status })}
         />
       </main>
 
@@ -168,6 +172,17 @@ export default function App() {
           onSave={saveTask}
           onDelete={deleteTask}
           onClose={() => setEditing(null)}
+        />
+      )}
+
+      {contactOpen && (
+        <ContactModal
+          teamName={team.name}
+          onSent={() => {
+            setContactOpen(false);
+            notify('Thanks. Finish sending it on GitHub.');
+          }}
+          onClose={() => setContactOpen(false)}
         />
       )}
     </div>

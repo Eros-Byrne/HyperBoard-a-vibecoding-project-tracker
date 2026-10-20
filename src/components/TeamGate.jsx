@@ -32,7 +32,7 @@ export default function TeamGate({ teams, onLogin, onCreateTeam, onJoinTeam }) {
               aria-pressed={mode === m.id}
               onClick={() => setMode(m.id)}
               className={`flex-1 rounded px-2 py-1.5 text-sm ${
-                mode === m.id ? 'bg-brand-primary text-white' : 'text-slate-300 hover:text-white'
+                mode === m.id ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:text-white'
               }`}
             >
               {m.label}

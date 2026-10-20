@@ -1,7 +1,7 @@
 // Shared Tailwind class strings so buttons and inputs look the same everywhere (DESIGN.md §4).
 
 export const btnPrimary =
-  'inline-flex items-center gap-1.5 rounded-md bg-brand-primary px-4 py-2 text-sm font-medium text-white hover:bg-brand-accent disabled:opacity-50';
+  'inline-flex items-center gap-1.5 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-600 disabled:opacity-50';
 
 export const btnGhost =
   'inline-flex items-center gap-1.5 rounded-md border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:border-brand-accent hover:text-white';

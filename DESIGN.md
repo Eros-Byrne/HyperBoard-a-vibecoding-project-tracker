@@ -33,7 +33,7 @@ These are the colors the build milestones will reference. Once chosen, paste the
 
 | Token | Hex | Where it shows up |
 |---|---|---|
-| `brand-primary` | `<#636651>` | Header, "+" button, focus rings |
+| `brand-primary` | `<#6366F1>` | Header, "+" button, focus rings |
 | `brand-accent` | `<#8B5CF6>` | Highlights, hover states, links |
 | `surface-page` | `<#0F172A>` | Page background |
 | `surface-card` | `<#1E293B>` | Card background |
@@ -109,6 +109,20 @@ To keep design tight, the following are explicitly not part of `design-done`:
 - Multiple themes. One brand, applied consistently.
 - Animations beyond a 200 ms fade on toast notifications.
 - A custom icon set. Use [Lucide icons](https://lucide.dev) via Tailwind classes if you need any.
+
+## 8. Design justification (NFR 2.2)
+
+| Decision | Why |
+|---|---|
+| Dark slate theme (`#0F172A` page, `#1E293B` cards) | Reduces eye strain in long sessions and matches the IDE-like tools in §1. Body text (`#F8FAFC`) and muted text (`#94A3B8`) both pass WCAG AA on cards (5.7:1 or better). |
+| Button fills one shade darker than `brand-primary` (`indigo-600`, hover `violet-600`) | White on `#6366F1` is 4.47:1, just under AA's 4.5:1 for normal text. `indigo-600` gives 6.3:1 and `violet-600` 5.7:1. `brand-primary` itself is kept for focus rings, drop highlights and the large wordmark (4.0:1 on the page, which passes for large text and UI parts). Small accent text uses `violet-300` (7.9:1). |
+| Type shown by stripe + icon + label | Feature vs bug never relies on colour alone, so it works for colour-blind users. |
+| Due state shown by tint + text pill ("Overdue", "Due soon", "On track", "Done") | Same reason: colour is a hint, the text is the information. |
+| "Move to" dropdown on every card, next to drag-and-drop | Cards can be moved with keyboard or screen reader, not only by mouse dragging. |
+| Visible focus ring on every control (2px `brand-primary`) | Full keyboard navigation (NFR 1.2). |
+| Modals trap focus, close on Esc and return focus | Keyboard and screen reader users never get lost behind the backdrop. |
+| Pre-set team colours (400-level shades) | Every option is 5.9:1 or better on the dark background, so team names in their colour pass AA. Custom HEX can come later (FR 1.4). |
+| Header: "+ New Task" top right | The most common action sits where the eye ends a scan of the header, the same spot as Linear and Vercel. |
 
 ---
 
