@@ -219,5 +219,53 @@ These requirements define how the system performs, its usability, and its struct
     NFR 4.1 Data Isolation: Data, tasks, and logged prompts must be strictly isolated between teams. A user logged into Team A must not be able to access Team B's data unless explicitly invited.
 
 
+## 16 Design Justification
+The application design prioritizes an intuitive interface that minimizes the learning curve for junior developers while providing the efficiency and depth required by expert developers. Because no formal design sheet exists, all UI/UX decisions (e.g., color contrast, button placement, typography) must be documented with justifications proving they enhance workflow and accessibility.
+
+Design Justification Log (Examples to build upon):
+
+    Color Palette & Contrast: "We chose a high-contrast dark mode option to reduce eye strain for developers working long hours, which also fulfills WCAG contrast accessibility requirements."
+
+    Kanban Interaction: "We implemented a click-to-move feature alongside drag-and-drop on the Kanban board to ensure it remains highly accessible for users who cannot use a mouse."
+
+    Workspace Customization: We restricted initial team color customizations to a curated, pre-set list of colors. (Justification: This allows us to ensure all selectable colors meet WCAG AA text-to-background contrast standards before rolling out custom HEX codes later).
+
+## 17 Minimum Viable Product (MVP)
+
+(The MVP defines the core features required to launch the initial, functional version of the app to your developers.)
+
+1. Basic Team & User Workspaces
+
+    Users must be able to create new teams, invite members, and join existing teams.
+
+    A user must be able to log into a specific team's workspace to collaborate on projects dedicated solely to that group.
+
+    Users must be able to color-code their team workspace using a pre-set list of colors.
+
+2. Core Kanban Board & Project Tracking
+
+    The application must feature a Kanban board where users can create, edit, move, and delete tasks across customizable columns.
+
+    Users must be able to define, track, and attach tasks to key project milestones over time.
+
+    The application must be fully navigable via keyboard, with clear focus states for all interactive elements on the Kanban board.
+
+    UI elements, especially drag-and-drop features on the Kanban board, must have appropriate ARIA labels for screen reader support.
+
+3. Vibe-Coding Data Logging
+
+    Within tasks or project notes, users must have dedicated fields or sections to log successful AI prompts and their corresponding generated results/code snippets for easy team reference.
+
+    Each project must have a dedicated space to log and pin important high-level information, architecture notes, and goals.
+
+4. Support & Feedback Mechanism
+
+    The application must include a built-in "Contact Us" or support page allowing users to report bugs, submit issues, or request help directly from the workspace.
+
+Out of Scope for MVP (Future Phases):
+
+    Custom configuration options, such as HEX code color selection and team photo/avatar uploads.
+
+
 
 *PRD version: hackathon-starter v1 · maintained by Prof. Dr. Ignacio Alvarez*
