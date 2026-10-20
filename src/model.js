@@ -127,6 +127,19 @@ export function addDays(isoDate, days) {
   return d.toLocaleDateString('en-CA');
 }
 
+/**
+ * M8 due-tint state (DESIGN.md §2).
+ * 'neutral' when done, 'overdue' when past, 'warning' within 2 days, 'safe' after that, null with no date.
+ */
+export function dueState(task) {
+  if (task.status === 'done') return 'neutral';
+  if (!task.dueDate) return null;
+  const days = Math.round((new Date(`${task.dueDate}T00:00:00`) - new Date(`${today()}T00:00:00`)) / 86400000);
+  if (days < 0) return 'overdue';
+  if (days <= 2) return 'warning';
+  return 'safe';
+}
+
 export function teamColor(team) {
   return (TEAM_COLORS.find((c) => c.id === team?.color) ?? TEAM_COLORS[0]).hex;
 }
