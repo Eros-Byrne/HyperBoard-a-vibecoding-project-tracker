@@ -15,6 +15,7 @@ import TeamGate from './components/TeamGate.jsx';
 import Header from './components/Header.jsx';
 import Board from './components/Board.jsx';
 import TaskModal from './components/TaskModal.jsx';
+import Toast from './components/Toast.jsx';
 
 export default function App() {
   const [teams, setTeams] = useLocalStorage(STORAGE_KEYS.teams, SEED_TEAMS);
@@ -23,6 +24,9 @@ export default function App() {
   const [tasks, setTasks] = useLocalStorage(STORAGE_KEYS.tasks, SEED_TASKS);
   const [session, setSession] = useLocalStorage(STORAGE_KEYS.session, SEED_SESSION);
   const [editing, setEditing] = useState(null); // { task, isNew } while the modal is open
+  const [toast, setToast] = useState(null); // { id, message }
+
+  const notify = (message) => setToast({ id: Date.now(), message });
 
   const team = teams.find((t) => t.id === session?.teamId);
 
@@ -77,6 +81,22 @@ export default function App() {
     setEditing(null);
   }
 
+  function updateTask(id, changes) {
+    setTasks(tasks.map((t) => (t.id === id ? { ...t, ...changes } : t)));
+  }
+
+  function handOff(task, name) {
+    updateTask(task.id, { assignee: name });
+    notify(`Task assigned to ${name}.`);
+  }
+
+  function addMember() {
+    const name = window.prompt(`Add a teammate to ${team.name}.\nThey can also join with code ${team.code}.\n\nName:`)?.trim();
+    if (!name || team.members.includes(name)) return;
+    setTeams(teams.map((t) => (t.id === team.id ? { ...t, members: [...t.members, name] } : t)));
+    notify(`${name} joined ${team.name}.`);
+  }
+
   return (
     <div className="min-h-full">
       <Header
@@ -89,10 +109,18 @@ export default function App() {
         onChangeColor={(color) => setTeams(teams.map((t) => (t.id === team.id ? { ...t, color } : t)))}
         onLogout={() => setSession(null)}
         onNewTask={() => setEditing({ task: newTask({ projectId: project.id, assignee: session.user }), isNew: true })}
+        onAddMember={addMember}
       />
       <main className="space-y-6 p-6">
-        <Board tasks={projectTasks} onOpen={(task) => setEditing({ task, isNew: false })} />
+        <Board
+          tasks={projectTasks}
+          members={team.members}
+          onOpen={(task) => setEditing({ task, isNew: false })}
+          onHandOff={handOff}
+        />
       </main>
+
+      {toast && <Toast key={toast.id} message={toast.message} onDone={() => setToast(null)} />}
 
       {editing && (
         <TaskModal
