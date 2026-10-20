@@ -1,0 +1,243 @@
+/**
+ * HyperBoard data model.
+ *
+ * Structure borrowed from Taskcafe: Team → Project → (Milestones, Tasks).
+ * Each collection is stored flat in localStorage and linked by ids.
+ * The Task fields from PRD §5 are kept exactly; new fields are only added.
+ */
+
+/**
+ * @typedef {Object} Team
+ * @property {string} id
+ * @property {string} name
+ * @property {string} code          6-char join code
+ * @property {string} color         id from TEAM_COLORS
+ * @property {string[]} members     the only valid values for Task.assignee
+ * @property {string} createdDate   ISO 'YYYY-MM-DD'
+ */
+
+/**
+ * @typedef {Object} Anchor
+ * @property {'presentation'|'demo'|'report'|'documentation'} id
+ * @property {string} label
+ * @property {string|null} url
+ */
+
+/**
+ * @typedef {Object} Project
+ * @property {string} id
+ * @property {string} teamId
+ * @property {string} name
+ * @property {string} notes         pinned info, architecture notes, goals
+ * @property {Anchor[]} anchors     the four deliverable slots
+ * @property {string} createdDate
+ */
+
+/**
+ * @typedef {Object} Milestone
+ * @property {string} id
+ * @property {string} projectId
+ * @property {string} title
+ * @property {string|null} dueDate
+ * @property {boolean} done
+ */
+
+/**
+ * @typedef {Object} PromptLog
+ * @property {string} id
+ * @property {string} tool          one of AI_TOOLS
+ * @property {string} prompt
+ * @property {string} result
+ * @property {string} createdAt     ISO timestamp
+ */
+
+/**
+ * @typedef {Object} Task
+ * @property {string} id
+ * @property {string} title
+ * @property {string} description
+ * @property {'feature'|'bug'} type
+ * @property {'todo'|'in-progress'|'review'|'done'} status
+ * @property {string} assignee
+ * @property {string|null} dueDate          ISO 'YYYY-MM-DD'
+ * @property {string} createdDate           ISO 'YYYY-MM-DD'
+ * @property {string} context               curated briefing for the next AI / teammate
+ * @property {string|null} contextTool      one of AI_TOOLS
+ * @property {string|null} contextUpdatedAt ISO timestamp
+ * @property {string} projectId
+ * @property {string|null} milestoneId
+ * @property {PromptLog[]} prompts
+ */
+
+/**
+ * @typedef {Object} Session
+ * @property {string} teamId
+ * @property {string} projectId
+ * @property {string} user          one of the team's members
+ */
+
+// The four columns of the board, in render order (PRD §7).
+export const STAGES = [
+  { id: 'todo',        label: 'To Do' },
+  { id: 'in-progress', label: 'In Progress' },
+  { id: 'review',      label: 'Review' },
+  { id: 'done',        label: 'Done' },
+];
+
+export const TASK_TYPES = [
+  { id: 'feature', label: 'Feature' },
+  { id: 'bug',     label: 'Bug' },
+];
+
+export const AI_TOOLS = ['Claude', 'ChatGPT', 'Cursor', 'Lovable', 'Replit', 'Other'];
+
+// Preset team colours. All are 400-level shades with 7:1+ contrast on surface-page.
+export const TEAM_COLORS = [
+  { id: 'indigo',  label: 'Indigo',  hex: '#818CF8' },
+  { id: 'emerald', label: 'Emerald', hex: '#34D399' },
+  { id: 'amber',   label: 'Amber',   hex: '#FBBF24' },
+  { id: 'rose',    label: 'Rose',    hex: '#FB7185' },
+  { id: 'sky',     label: 'Sky',     hex: '#38BDF8' },
+  { id: 'violet',  label: 'Violet',  hex: '#A78BFA' },
+];
+
+export const ANCHOR_SLOTS = [
+  { id: 'presentation',  label: 'Presentation' },
+  { id: 'demo',          label: 'Demo' },
+  { id: 'report',        label: 'Report' },
+  { id: 'documentation', label: 'Documentation' },
+];
+
+export const STORAGE_KEYS = {
+  teams:      'hyperboard.teams',
+  projects:   'hyperboard.projects',
+  milestones: 'hyperboard.milestones',
+  tasks:      'hyperboard.tasks',
+  session:    'hyperboard.session',
+};
+
+export const uid = () => crypto.randomUUID();
+
+/** Local date as 'YYYY-MM-DD'. */
+export const today = () => new Date().toLocaleDateString('en-CA');
+
+export function addDays(isoDate, days) {
+  const d = new Date(`${isoDate}T00:00:00`);
+  d.setDate(d.getDate() + days);
+  return d.toLocaleDateString('en-CA');
+}
+
+export function teamColor(team) {
+  return (TEAM_COLORS.find((c) => c.id === team?.color) ?? TEAM_COLORS[0]).hex;
+}
+
+function joinCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+}
+
+export function newTeam({ name, color, founder }) {
+  return { id: uid(), name, code: joinCode(), color, members: [founder], createdDate: today() };
+}
+
+export function newProject({ teamId, name }) {
+  return {
+    id: uid(),
+    teamId,
+    name,
+    notes: '',
+    anchors: ANCHOR_SLOTS.map((a) => ({ ...a, url: null })),
+    createdDate: today(),
+  };
+}
+
+export function newMilestone({ projectId, title, dueDate = null }) {
+  return { id: uid(), projectId, title, dueDate, done: false };
+}
+
+export function newTask({ projectId, assignee, status = 'todo' }) {
+  return {
+    id: uid(),
+    title: '',
+    description: '',
+    type: 'feature',
+    status,
+    assignee,
+    dueDate: null,
+    createdDate: today(),
+    context: '',
+    contextTool: null,
+    contextUpdatedAt: null,
+    projectId,
+    milestoneId: null,
+    prompts: [],
+  };
+}
+
+// ---- Seed data: a demo workspace so the board isn't empty on first load ----
+
+const SEED_TEAM_ID = 'team-demo';
+const SEED_PROJECT_ID = 'project-demo';
+const SEED_USER = 'Eros Byrne';
+
+export const SEED_TEAMS = [
+  { id: SEED_TEAM_ID, name: 'HyperBoard', code: 'HYPER1', color: 'indigo', members: [SEED_USER], createdDate: today() },
+];
+
+export const SEED_SESSION = { teamId: SEED_TEAM_ID, projectId: SEED_PROJECT_ID, user: SEED_USER };
+
+export const SEED_PROJECTS = [
+  {
+    ...newProject({ teamId: SEED_TEAM_ID, name: 'HyperBoard tracker' }),
+    id: SEED_PROJECT_ID,
+    notes: 'Goal: ship a Kanban tracker for vibecoding teams.\nStack: React + Vite + Tailwind, localStorage, Vercel.',
+  },
+];
+
+export const SEED_MILESTONES = [
+  { id: 'ms-mvp',   projectId: SEED_PROJECT_ID, title: 'MVP board',  dueDate: addDays(today(), 3),  done: false },
+  { id: 'ms-pitch', projectId: SEED_PROJECT_ID, title: 'Pitch demo', dueDate: addDays(today(), 10), done: false },
+];
+
+const seedTask = (fields) => ({
+  ...newTask({ projectId: SEED_PROJECT_ID, assignee: SEED_USER }),
+  ...fields,
+});
+
+export const SEED_TASKS = [
+  seedTask({
+    id: 'task-1',
+    title: 'Render the four-column board',
+    description: 'Columns from STAGES, cards filtered by status.',
+    status: 'done',
+    dueDate: addDays(today(), -1),
+    milestoneId: 'ms-mvp',
+  }),
+  seedTask({
+    id: 'task-2',
+    title: 'Add / edit task modal',
+    description: 'One modal for create and edit, with delete.',
+    status: 'in-progress',
+    dueDate: addDays(today(), 1),
+    milestoneId: 'ms-mvp',
+    context: 'Modal uses a shared dialog shell. Next: validate the title field.',
+    contextTool: 'Claude',
+    contextUpdatedAt: new Date().toISOString(),
+  }),
+  seedTask({
+    id: 'task-3',
+    title: 'Cards lose their order after reload',
+    description: 'Repro: drag a card, refresh the page.',
+    type: 'bug',
+    status: 'review',
+    dueDate: addDays(today(), -2),
+  }),
+  seedTask({
+    id: 'task-4',
+    title: 'Copy as Prompt Context button',
+    description: 'Serialize the task + context to Markdown and copy it.',
+    status: 'todo',
+    dueDate: addDays(today(), 6),
+    milestoneId: 'ms-pitch',
+  }),
+];

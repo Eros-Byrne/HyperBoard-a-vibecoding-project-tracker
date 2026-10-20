@@ -68,6 +68,57 @@ Anchor = {
 }
 ```
 
+### Extended model (HyperBoard)
+
+Structure borrowed from [Taskcafe](https://github.com/JordanKnott/taskcafe): **Team → Project → Milestones / Tasks**. Every collection is stored flat in localStorage (`hyperboard.teams`, `.projects`, `.milestones`, `.tasks`, `.session`) and linked by ids. All `Task` fields above are kept unchanged; the fields below are only added. Source of truth: `src/model.js`.
+
+```js
+Team = {
+  id: string,
+  name: string,
+  code: string,                  // 6-char join code teammates type in
+  color: string,                 // id from TEAM_COLORS (pre-set, AA-checked)
+  members: string[],             // the only allowed values for Task.assignee in this team
+  createdDate: string,
+}
+
+Project = {
+  id: string,
+  teamId: string,
+  name: string,
+  notes: string,                 // FR 2.3 pinned info, architecture notes, goals
+  anchors: Anchor[],             // the four deliverable slots, per project
+  createdDate: string,
+}
+
+Milestone = {                    // FR 2.2
+  id: string,
+  projectId: string,
+  title: string,
+  dueDate: string | null,
+  done: boolean,
+}
+
+Task = {
+  ...the PRD fields above,
+  projectId: string,
+  milestoneId: string | null,
+  prompts: PromptLog[],          // FR 3.1 prompt + result log
+}
+
+PromptLog = {
+  id: string,
+  tool: string,                  // same list as contextTool
+  prompt: string,
+  result: string,                // generated output / code snippet
+  createdAt: string,             // ISO timestamp
+}
+
+Session = { teamId, projectId, user }   // who is "signed in" to which workspace
+```
+
+Teams are local to the browser: there are no passwords, and "join with code" only finds teams created in the same browser. A real backend is still out of scope (§12).
+
 ## 6. Tech stack
 
 | Layer | Choice | Why |
