@@ -95,7 +95,7 @@ Fill these in before tagging `prd-done`:
 
 | Slot | Name | GitHub handle |
 |---|---|---|
-| Teammate A | `Eros Byrne` | `Shymaybe` |
+| Teammate A | `Eros Byrne` | `Shmaybe` |
 
 These three names become the **only** allowed values for `Task.assignee`. No auth — just a dropdown.
 
@@ -105,18 +105,18 @@ Fill in the owner column. Recommended default in **bold**; change if your team h
 
 | # | Tag | Title | Suggested owner | Final owner |
 |---|---|---|---|---|
-| 3 | `design-done` | Design system + voice (DESIGN.md) | **B** | `<TODO>` |
-| 4 | `data-model` | Task model + board view | **A** | `<TODO>` |Eros
-| 5 | `crud-modal` | Add / edit / delete modal | **A** |ErosO>` |
-| 6 | `tag-style` | Feature / bug colors | **B** | `<TODO>Eros
-| 7 | `task-owner` | Owner indicator + handoff | **AEros<TODO>` |
-| 8 | `due-tint` | Due-date color tinting | **B** | `<TODOEros
-| 9 | `context` | Context field on the task modal | *Eros `<TODO>` |
-| 10 | `copy-prompt` | "Copy as Prompt Context" button | **C*ErosTODO>` |
-| 11 | `anchors` | Deliverable Anchor Board | **B** | `<TODO>` |Eros
-| 12 | `secret-sauce` | The one thing that makes it youEros*C / All** | `<TODO>` |
-| 13 | `pitch-ready` | Demo + pitch rehearsal | **All** | `<TODO>` |Eros
-Eros
+| 3 | `design-done` | Design system + voice (DESIGN.md) | **B** | `Eros` |
+| 4 | `data-model` | Task model + board view | **A** | `Eros` |
+| 5 | `crud-modal` | Add / edit / delete modal | **A** |`Eros`  |
+| 6 | `tag-style` | Feature / bug colors | **B** |`Eros` |
+| 7 | `task-owner` | Owner indicator + handoff | **A** |`Eros` |
+| 8 | `due-tint` | Due-date color tinting | **B** | `Eros` |
+| 9 | `context` | Context field on the task modal | **A**  | `Eros` |
+| 10 | `copy-prompt` | "Copy as Prompt Context" button | **C** |`Eros` |
+| 11 | `anchors` | Deliverable Anchor Board | **B** | `Eros` |
+| 12 | `secret-sauce` | The one thing that makes it you |  **B** |`Eros`|
+| 13 | `pitch-ready` | Demo + pitch rehearsal | **B** | `Eros` |
+
 
 Track A owns the state model and task ownership. Track B owns the visuals (and design — M3 runs parallel to M2 so the team starts Phase 3 with the palette already chosen). Track C owns the differentiator features (M9 + M10 — the context field and the Copy-as-Prompt button) and usually leads on M12 secret-sauce. Put your strongest prompter on Track C.
 
@@ -141,9 +141,9 @@ Keep the Context field of each real task up to date as you work. By the end of t
 
 Fill in:
 
-- **Team name:** `<TODO>`
-- **Tagline (one sentence):** `<TODO>`
-- **Tracker URL after deploy:** `<TODO>` (Vercel will give it to you)
+- **Team name:** `<24056128>`
+- **Tagline (one sentence):** `<prd-done>`
+- **Tracker URL after deploy:** `<https://hyper-board-a-vibecoding-project-tr.vercel.app/>` (Vercel will give it to you)
 
 ## 12. Out of scope (do not build)
 
