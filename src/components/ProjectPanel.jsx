@@ -81,7 +81,7 @@ export default function ProjectPanel({ project, milestones, tasks, onNotesChange
           <label htmlFor="ms-title" className="sr-only">New milestone name</label>
           <input id="ms-title" className={input} placeholder="New milestone" required value={title} onChange={(e) => setTitle(e.target.value)} />
           <label htmlFor="ms-due" className="sr-only">New milestone due date</label>
-          <input id="ms-due" type="date" className={`${input} w-40 [color-scheme:dark]`} value={due} onChange={(e) => setDue(e.target.value)} />
+          <input id="ms-due" type="date" className={`${input} w-40`} value={due} onChange={(e) => setDue(e.target.value)} />
           <button type="submit" className={btnGhost} aria-label="Add milestone">
             <Plus size={16} aria-hidden="true" />
           </button>

@@ -49,7 +49,7 @@ export default function Modal({ title, onClose, children, wide = false }) {
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 id="modal-title" className="text-base font-semibold text-slate-50">{title}</h2>
-          <button type="button" onClick={onClose} aria-label="Close" className="rounded p-1 text-slate-400 hover:text-white">
+          <button type="button" onClick={onClose} aria-label="Close" className="rounded p-1 text-slate-400 hover:text-slate-50">
             <X size={18} aria-hidden="true" />
           </button>
         </div>

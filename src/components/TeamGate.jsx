@@ -32,7 +32,7 @@ export default function TeamGate({ teams, onLogin, onCreateTeam, onJoinTeam }) {
               aria-pressed={mode === m.id}
               onClick={() => setMode(m.id)}
               className={`flex-1 rounded px-2 py-1.5 text-sm ${
-                mode === m.id ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:text-white'
+                mode === m.id ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:text-slate-50'
               }`}
             >
               {m.label}
@@ -140,7 +140,7 @@ function ColorPicker({ value, onChange }) {
               className="peer sr-only"
             />
             <span
-              className="block h-8 w-8 rounded-full ring-offset-2 ring-offset-surface-card peer-checked:ring-2 peer-checked:ring-white peer-focus-visible:ring-2 peer-focus-visible:ring-brand-primary"
+              className="block h-8 w-8 rounded-full ring-offset-2 ring-offset-surface-card peer-checked:ring-2 peer-checked:ring-slate-50 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-primary"
               style={{ background: c.hex }}
             />
             <span className="sr-only">{c.label}</span>

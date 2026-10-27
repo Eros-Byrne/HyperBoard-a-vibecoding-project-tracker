@@ -37,9 +37,16 @@ export default function App() {
     window.matchMedia('(prefers-contrast: more)').matches,
   );
 
+  // Same pattern for light / dark: follows the OS until the viewer picks one.
+  const [darkMode, setDarkMode] = useLocalStorage(
+    STORAGE_KEYS.theme,
+    !window.matchMedia('(prefers-color-scheme: light)').matches,
+  );
+
   useEffect(() => {
     document.documentElement.classList.toggle('hc', highContrast);
-  }, [highContrast]);
+    document.documentElement.classList.toggle('light', !darkMode);
+  }, [highContrast, darkMode]);
 
   const notify = (message) => setToast({ id: Date.now(), message });
 
@@ -169,6 +176,8 @@ export default function App() {
         onContact={() => setContactOpen(true)}
         highContrast={highContrast}
         onToggleContrast={() => setHighContrast(!highContrast)}
+        darkMode={darkMode}
+        onToggleDark={() => setDarkMode(!darkMode)}
       />
       <main className="space-y-6 p-6">
         <AnchorBoard anchors={project.anchors} onChange={(anchors) => updateProject({ anchors })} />

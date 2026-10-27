@@ -82,7 +82,7 @@ export default function TaskModal({ task, isNew, members, milestones, onSave, on
           </div>
           <div>
             <label htmlFor="task-due" className={label}>Due date</label>
-            <input id="task-due" type="date" className={`${input} [color-scheme:dark]`} value={draft.dueDate ?? ''} onChange={set('dueDate')} />
+            <input id="task-due" type="date" className={`${input}`} value={draft.dueDate ?? ''} onChange={set('dueDate')} />
           </div>
           <div className="col-span-2">
             <label htmlFor="task-milestone" className={label}>Milestone</label>
@@ -113,7 +113,7 @@ export default function TaskModal({ task, isNew, members, milestones, onSave, on
               {/* Adds the template below any existing text, so nothing is overwritten */}
               <button
                 type="button"
-                className="mb-1 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-violet-300 hover:text-white"
+                className="mb-1 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-violet-300 hover:text-slate-50"
                 onClick={() =>
                   setDraft({ ...draft, context: draft.context.trim() ? `${draft.context.trimEnd()}\n\n${CONTEXT_TEMPLATE}` : CONTEXT_TEMPLATE })
                 }

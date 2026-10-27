@@ -3,7 +3,7 @@ import { dueState, STAGES } from '../model.js';
 
 // M6: accent stripe + icon + label, so type is never shown by colour alone.
 const TYPE_STYLE = {
-  feature: { stripe: 'border-l-type-feature', badge: 'text-type-feature bg-type-feature/10', Icon: Sparkles, label: 'Feature' },
+  feature: { stripe: 'border-l-type-feature', badge: 'text-emerald-300 bg-type-feature/10', Icon: Sparkles, label: 'Feature' },
   bug:     { stripe: 'border-l-type-bug',     badge: 'text-red-300 bg-type-bug/10',          Icon: Bug,      label: 'Bug' },
 };
 
@@ -17,7 +17,7 @@ const DUE_STYLE = {
 
 const initials = (name) => name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
-const miniSelect = 'rounded border border-slate-700 bg-surface-page px-1.5 py-1 text-xs text-slate-200';
+const miniSelect = 'rounded border border-slate-500 bg-surface-page px-1.5 py-1 text-xs text-slate-200';
 
 export default function TaskCard({ task, members, onOpen, onHandOff, onCopy, onMove }) {
   const type = TYPE_STYLE[task.type];
@@ -96,7 +96,7 @@ export default function TaskCard({ task, members, onOpen, onHandOff, onCopy, onM
         </select>
         <button
           type="button"
-          className="ml-auto inline-flex items-center gap-1 rounded border border-slate-700 px-1.5 py-1 text-xs text-slate-200 hover:border-brand-accent hover:text-white"
+          className="ml-auto inline-flex items-center gap-1 rounded border border-slate-700 px-1.5 py-1 text-xs text-slate-200 hover:border-brand-accent hover:text-slate-50"
           aria-label={`Copy "${task.title}" as prompt context`}
           onClick={() => onCopy(task)}
         >

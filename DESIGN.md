@@ -105,7 +105,7 @@ The tracker probably doesn't need a logo, but it does need a name and a wordmark
 
 To keep design tight, the following are explicitly not part of `design-done`:
 
-- A dark mode toggle. Pick one mode and ship it.
+- ~~A dark mode toggle. Pick one mode and ship it.~~ Added after the hackathon at the client's request (light / dark toggle, see §8). Dark stays the default.
 - Multiple themes. One brand, applied consistently.
 - Animations beyond a 200 ms fade on toast notifications.
 - A custom icon set. Use [Lucide icons](https://lucide.dev) via Tailwind classes if you need any.
@@ -122,7 +122,8 @@ To keep design tight, the following are explicitly not part of `design-done`:
 | Visible focus ring on every control (2px `brand-primary`) | Full keyboard navigation (NFR 1.2). |
 | Modals trap focus, close on Esc and return focus | Keyboard and screen reader users never get lost behind the backdrop. |
 | Pre-set team colours (400-level shades) | Every option is 5.9:1 or better on the dark background, so team names in their colour pass AA. Custom HEX can come later (FR 1.4). |
-| "High contrast" toggle, left of "+ New Task" | For low-vision users and bright rooms. Switches to black surfaces, white text and borders, and yellow (`#FFE600`) actions, links and focus rings (all 15:1 or better). Starts on if the OS asks for more contrast (`prefers-contrast: more`), then remembers the viewer's choice. Shown as a toggle button (`aria-pressed`). |
+| "Dark mode" toggle, left of "High contrast" | Dark suits long sessions; light suits bright rooms and people who read better with dark text on light. Follows the OS setting (`prefers-color-scheme`) until the viewer picks, then remembers it. Built from CSS variables, so every component works in both. Light palette: page `#F8FAFC`, cards white, body text `#0F172A` (17:1), muted text `#475569` (7.2:1), placeholders `#64748B` (4.5:1); accent texts switch to their 700/800 shades (4.8:1 or better); team names use the 700 shade of the team colour (4.8:1 or better). |
+| "High contrast" toggle, left of "+ New Task" | For low-vision users. Works in both themes. Dark: black surfaces, white text and borders, yellow (`#FFE600`, 16.6:1) actions, links and focus rings. Light: white surfaces, black text and borders, dark blue (`#1E3A8A`, 10.4:1) actions, links and focus rings. Starts on if the OS asks for more contrast (`prefers-contrast: more`), then remembers the viewer's choice. Both toggles use `aria-pressed`. |
 | "Skip to board" link as the first Tab stop | Keyboard users can jump past the header, deliverables and notes straight to the Kanban (WCAG 2.4.1). |
 | Card moves are announced | Moving a card by drag or by the Move dropdown shows a toast in a `role="status"` live region, so screen readers say where it went (NFR 1.3). |
 | Reduced motion respected | With `prefers-reduced-motion`, the toast fade and other transitions are turned off. |

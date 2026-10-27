@@ -2,6 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Theme colours as "R G B" triplets (used by tailwind.config.js).
+ * Dark is the default; html.light flips the slate scale so the same
+ * classes (text-slate-50, border-slate-700…) read correctly on white.
+ */
+:root {
+  color-scheme: dark;
+  --surface-page: 15 23 42;   /* #0F172A */
+  --surface-card: 30 41 59;   /* #1E293B */
+  --slate-50: 248 250 252;
+  --slate-100: 241 245 249;
+  --slate-200: 226 232 240;
+  --slate-300: 203 213 225;
+  --slate-400: 148 163 184;
+  --slate-500: 100 116 139;
+  --slate-600: 71 85 105;
+  --slate-700: 51 65 85;
+  --slate-800: 30 41 59;
+  --slate-900: 15 23 42;
+  --slate-950: 2 6 23;
+  --red-300: 252 165 165;
+  --emerald-300: 110 231 183;
+  --amber-300: 252 211 77;
+  --violet-300: 196 181 253;
+}
+
+html.light {
+  color-scheme: light;
+  --surface-page: 248 250 252; /* #F8FAFC */
+  --surface-card: 255 255 255;
+  --slate-50: 15 23 42;        /* strongest text */
+  --slate-100: 30 41 59;
+  --slate-200: 30 41 59;
+  --slate-300: 51 65 85;
+  --slate-400: 71 85 105;      /* muted text, 7.2:1 on page */
+  --slate-500: 100 116 139;    /* placeholders, 4.5:1 */
+  --slate-600: 148 163 184;
+  --slate-700: 203 213 225;    /* borders */
+  --slate-800: 226 232 240;
+  --slate-900: 226 232 240;    /* column background */
+  --slate-950: 241 245 249;
+  --red-300: 185 28 28;        /* red-700 */
+  --emerald-300: 4 120 87;     /* emerald-700 */
+  --amber-300: 146 64 14;      /* amber-800 */
+  --violet-300: 109 40 217;    /* violet-700 */
+}
+
 html, body, #root {
   height: 100%;
 }
@@ -9,8 +56,8 @@ html, body, #root {
 body {
   font-family: Inter, 'SF Pro Text', ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #0f172a; /* surface-page */
-  color: #f8fafc;            /* text-primary */
+  background-color: rgb(var(--surface-page));
+  color: rgb(var(--slate-50));
 }
 
 /* Visible keyboard focus on every control (NFR 1.2). */
@@ -28,39 +75,57 @@ body {
 }
 
 /*
- * High contrast mode: toggled by the header button (html.hc).
- * Black surfaces, white text and borders, yellow for actions, links and focus.
- * Type and due-date colours are kept: they are all bright enough on black.
+ * High contrast mode: toggled by the header button (html.hc), works in both themes.
+ *   Dark + HC:  black surfaces, white text/borders, yellow actions, links and focus.
+ *   Light + HC: white surfaces, black text/borders, dark blue actions, links and focus.
+ * Type and due-date colours are kept: they stay readable in both.
  */
-html.hc body { background-color: #000; color: #fff; }
+html.hc {
+  --hc-bg: #000;
+  --hc-fg: #fff;
+  --hc-muted: #d4d4d4;               /* placeholders only */
+  --hc-accent: #ffe600;              /* 16.6:1 on black */
+  --hc-on-accent: #000;
+  --hc-backdrop: rgb(0 0 0 / 0.85);
+}
+html.hc.light {
+  --hc-bg: #fff;
+  --hc-fg: #000;
+  --hc-muted: #404040;
+  --hc-accent: #1e3a8a;              /* 10.4:1 on white */
+  --hc-on-accent: #fff;
+  --hc-backdrop: rgb(255 255 255 / 0.85);
+}
+
+html.hc body { background-color: var(--hc-bg); color: var(--hc-fg); }
 
 html.hc .bg-surface-page,
 html.hc .bg-surface-card,
 html.hc .bg-surface-page\/60,
 html.hc .bg-slate-900\/60,
-html.hc .bg-slate-700 { background-color: #000; }
-html.hc .bg-slate-900\/70 { background-color: rgb(0 0 0 / 0.85); }
+html.hc .bg-slate-700 { background-color: var(--hc-bg); }
+html.hc .bg-slate-900\/70 { background-color: var(--hc-backdrop); }
 
 html.hc .text-slate-50,
 html.hc .text-slate-100,
 html.hc .text-slate-200,
 html.hc .text-slate-300,
 html.hc .text-slate-400,
-html.hc .text-slate-500,
-html.hc .text-white { color: #fff; }
-html.hc .placeholder\:text-slate-500::placeholder { color: #d4d4d4; }
+html.hc .text-slate-500 { color: var(--hc-fg); }
+html.hc .placeholder\:text-slate-500::placeholder { color: var(--hc-muted); }
 
+html.hc .border-slate-500,
 html.hc .border-slate-700,
-html.hc .border-slate-800 { border-color: #fff; }
-html.hc .hover\:border-brand-accent:hover { border-color: #ffe600; }
+html.hc .border-slate-800 { border-color: var(--hc-fg); }
+html.hc .hover\:border-brand-accent:hover { border-color: var(--hc-accent); }
 
 html.hc .text-violet-300,
 html.hc .text-brand-primary,
-html.hc .hover\:text-white:hover { color: #ffe600; }
+html.hc .hover\:text-slate-50:hover { color: var(--hc-accent); }
 html.hc a { text-decoration: underline; }
 
-html.hc .bg-indigo-600 { background-color: #ffe600; color: #000; }
-html.hc .hover\:bg-violet-600:hover { background-color: #fff; color: #000; }
+html.hc .bg-indigo-600 { background-color: var(--hc-accent); color: var(--hc-on-accent); }
+html.hc .hover\:bg-violet-600:hover { background-color: var(--hc-fg); color: var(--hc-bg); }
 
-html.hc .ring-brand-primary { --tw-ring-color: #ffe600; }
-html.hc :focus-visible { outline: 3px solid #ffe600; outline-offset: 2px; }
+html.hc .ring-brand-primary { --tw-ring-color: var(--hc-accent); }
+html.hc :focus-visible { outline: 3px solid var(--hc-accent); outline-offset: 2px; }

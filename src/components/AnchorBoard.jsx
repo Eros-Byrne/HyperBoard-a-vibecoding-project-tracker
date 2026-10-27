@@ -38,7 +38,7 @@ export default function AnchorBoard({ anchors, onChange }) {
                 <button
                   type="button"
                   onClick={() => setEditingId(a.id)}
-                  className="ml-auto rounded p-1 text-slate-400 hover:text-white"
+                  className="ml-auto rounded p-1 text-slate-400 hover:text-slate-50"
                   aria-label={a.url ? `Edit ${a.label} link` : `Add ${a.label} link`}
                 >
                   {a.url ? <Pencil size={14} aria-hidden="true" /> : <Link2 size={14} aria-hidden="true" />}
@@ -75,7 +75,7 @@ function AnchorForm({ anchor, onSave, onCancel }) {
         onChange={(e) => setUrl(e.target.value)}
       />
       <div className="flex justify-end gap-2 text-xs">
-        <button type="button" onClick={onCancel} className="rounded px-2 py-1 text-slate-300 hover:text-white">Cancel</button>
+        <button type="button" onClick={onCancel} className="rounded px-2 py-1 text-slate-300 hover:text-slate-50">Cancel</button>
         <button type="submit" className="rounded bg-indigo-600 px-2 py-1 text-white hover:bg-violet-600">Save</button>
       </div>
     </form>

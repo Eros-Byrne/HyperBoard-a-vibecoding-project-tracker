@@ -94,14 +94,15 @@ export const AI_TOOLS = ['Claude', 'ChatGPT', 'Cursor', 'Lovable', 'Replit', 'Ot
 // M9: starter headings for a paste-ready Context briefing.
 export const CONTEXT_TEMPLATE = ['**Goal:** ', '**Done so far:** ', '**Next step:** ', '**Gotchas:** '].join('\n');
 
-// Preset team colours. All are 400-level shades with 5.9:1+ contrast on surface-page (WCAG AA).
+// Preset team colours. `hex` (400 shade) is 5.9:1+ on the dark page; `lightHex` (700 shade)
+// is 4.8:1+ on the light page, used for team-name text in light mode (WCAG AA).
 export const TEAM_COLORS = [
-  { id: 'indigo',  label: 'Indigo',  hex: '#818CF8' },
-  { id: 'emerald', label: 'Emerald', hex: '#34D399' },
-  { id: 'amber',   label: 'Amber',   hex: '#FBBF24' },
-  { id: 'rose',    label: 'Rose',    hex: '#FB7185' },
-  { id: 'sky',     label: 'Sky',     hex: '#38BDF8' },
-  { id: 'violet',  label: 'Violet',  hex: '#A78BFA' },
+  { id: 'indigo',  label: 'Indigo',  hex: '#818CF8', lightHex: '#4338CA' },
+  { id: 'emerald', label: 'Emerald', hex: '#34D399', lightHex: '#047857' },
+  { id: 'amber',   label: 'Amber',   hex: '#FBBF24', lightHex: '#B45309' },
+  { id: 'rose',    label: 'Rose',    hex: '#FB7185', lightHex: '#BE123C' },
+  { id: 'sky',     label: 'Sky',     hex: '#38BDF8', lightHex: '#0369A1' },
+  { id: 'violet',  label: 'Violet',  hex: '#A78BFA', lightHex: '#6D28D9' },
 ];
 
 export const ANCHOR_SLOTS = [
@@ -118,6 +119,7 @@ export const STORAGE_KEYS = {
   tasks:      'hyperboard.tasks',
   session:    'hyperboard.session',
   highContrast: 'hyperboard.highContrast',
+  theme:        'hyperboard.theme',
 };
 
 export const uid = () => crypto.randomUUID();
@@ -178,8 +180,9 @@ export function taskToPrompt(task, { projectName, milestoneTitle } = {}) {
   return lines.join('\n');
 }
 
-export function teamColor(team) {
-  return (TEAM_COLORS.find((c) => c.id === team?.color) ?? TEAM_COLORS[0]).hex;
+export function teamColor(team, light = false) {
+  const c = TEAM_COLORS.find((x) => x.id === team?.color) ?? TEAM_COLORS[0];
+  return light ? c.lightHex : c.hex;
 }
 
 function joinCode() {
