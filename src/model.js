@@ -117,6 +117,7 @@ export const STORAGE_KEYS = {
   milestones: 'hyperboard.milestones',
   tasks:      'hyperboard.tasks',
   session:    'hyperboard.session',
+  highContrast: 'hyperboard.highContrast',
 };
 
 export const uid = () => crypto.randomUUID();

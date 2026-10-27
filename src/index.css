@@ -18,3 +18,49 @@ body {
   outline: 2px solid #6366f1; /* brand-primary */
   outline-offset: 2px;
 }
+
+/* No fades or transitions for people who ask their OS for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * High contrast mode: toggled by the header button (html.hc).
+ * Black surfaces, white text and borders, yellow for actions, links and focus.
+ * Type and due-date colours are kept: they are all bright enough on black.
+ */
+html.hc body { background-color: #000; color: #fff; }
+
+html.hc .bg-surface-page,
+html.hc .bg-surface-card,
+html.hc .bg-surface-page\/60,
+html.hc .bg-slate-900\/60,
+html.hc .bg-slate-700 { background-color: #000; }
+html.hc .bg-slate-900\/70 { background-color: rgb(0 0 0 / 0.85); }
+
+html.hc .text-slate-50,
+html.hc .text-slate-100,
+html.hc .text-slate-200,
+html.hc .text-slate-300,
+html.hc .text-slate-400,
+html.hc .text-slate-500,
+html.hc .text-white { color: #fff; }
+html.hc .placeholder\:text-slate-500::placeholder { color: #d4d4d4; }
+
+html.hc .border-slate-700,
+html.hc .border-slate-800 { border-color: #fff; }
+html.hc .hover\:border-brand-accent:hover { border-color: #ffe600; }
+
+html.hc .text-violet-300,
+html.hc .text-brand-primary,
+html.hc .hover\:text-white:hover { color: #ffe600; }
+html.hc a { text-decoration: underline; }
+
+html.hc .bg-indigo-600 { background-color: #ffe600; color: #000; }
+html.hc .hover\:bg-violet-600:hover { background-color: #fff; color: #000; }
+
+html.hc .ring-brand-primary { --tw-ring-color: #ffe600; }
+html.hc :focus-visible { outline: 3px solid #ffe600; outline-offset: 2px; }

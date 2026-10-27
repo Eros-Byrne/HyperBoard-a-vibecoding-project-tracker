@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  STAGES,
   STORAGE_KEYS,
   SEED_TEAMS,
   SEED_PROJECTS,
@@ -30,6 +31,15 @@ export default function App() {
   const [editing, setEditing] = useState(null); // { task, isNew } while the modal is open
   const [toast, setToast] = useState(null); // { id, message }
   const [contactOpen, setContactOpen] = useState(false);
+  // Starts on if the OS asks for more contrast; after that the viewer's choice is remembered.
+  const [highContrast, setHighContrast] = useLocalStorage(
+    STORAGE_KEYS.highContrast,
+    window.matchMedia('(prefers-contrast: more)').matches,
+  );
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('hc', highContrast);
+  }, [highContrast]);
 
   const notify = (message) => setToast({ id: Date.now(), message });
 
@@ -105,6 +115,15 @@ export default function App() {
     setTasks(tasks.map((t) => (t.id === id ? { ...t, ...changes } : t)));
   }
 
+  // Used by both drag-and-drop and the Move dropdown; the toast is a live region,
+  // so screen readers hear where the card went (NFR 1.3).
+  function moveTask(id, status) {
+    const task = tasks.find((t) => t.id === id);
+    if (!task || task.status === status) return;
+    updateTask(id, { status });
+    notify(`Moved "${task.title}" to ${STAGES.find((s) => s.id === status).label}.`);
+  }
+
   function handOff(task, name) {
     updateTask(task.id, { assignee: name });
     notify(`Task assigned to ${name}.`);
@@ -129,6 +148,13 @@ export default function App() {
 
   return (
     <div className="min-h-full">
+      {/* First Tab stop: jump past the header and panels straight to the board (NFR 1.2) */}
+      <a
+        href="#board"
+        className="sr-only rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50"
+      >
+        Skip to board
+      </a>
       <Header
         team={team}
         projects={teamProjects}
@@ -141,6 +167,8 @@ export default function App() {
         onNewTask={() => setEditing({ task: newTask({ projectId: project.id, assignee: session.user }), isNew: true })}
         onAddMember={addMember}
         onContact={() => setContactOpen(true)}
+        highContrast={highContrast}
+        onToggleContrast={() => setHighContrast(!highContrast)}
       />
       <main className="space-y-6 p-6">
         <AnchorBoard anchors={project.anchors} onChange={(anchors) => updateProject({ anchors })} />
@@ -151,14 +179,16 @@ export default function App() {
           onNotesChange={(notes) => updateProject({ notes })}
           onMilestonesChange={setProjectMilestones}
         />
-        <Board
-          tasks={projectTasks}
-          members={team.members}
-          onOpen={(task) => setEditing({ task, isNew: false })}
-          onHandOff={handOff}
-          onCopy={copyPrompt}
-          onMove={(id, status) => updateTask(id, { status })}
-        />
+        <div id="board" tabIndex={-1} className="focus:outline-none">
+          <Board
+            tasks={projectTasks}
+            members={team.members}
+            onOpen={(task) => setEditing({ task, isNew: false })}
+            onHandOff={handOff}
+            onCopy={copyPrompt}
+            onMove={moveTask}
+          />
+        </div>
       </main>
 
       {toast && <Toast key={toast.id} message={toast.message} onDone={() => setToast(null)} />}

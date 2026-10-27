@@ -122,6 +122,10 @@ To keep design tight, the following are explicitly not part of `design-done`:
 | Visible focus ring on every control (2px `brand-primary`) | Full keyboard navigation (NFR 1.2). |
 | Modals trap focus, close on Esc and return focus | Keyboard and screen reader users never get lost behind the backdrop. |
 | Pre-set team colours (400-level shades) | Every option is 5.9:1 or better on the dark background, so team names in their colour pass AA. Custom HEX can come later (FR 1.4). |
+| "High contrast" toggle, left of "+ New Task" | For low-vision users and bright rooms. Switches to black surfaces, white text and borders, and yellow (`#FFE600`) actions, links and focus rings (all 15:1 or better). Starts on if the OS asks for more contrast (`prefers-contrast: more`), then remembers the viewer's choice. Shown as a toggle button (`aria-pressed`). |
+| "Skip to board" link as the first Tab stop | Keyboard users can jump past the header, deliverables and notes straight to the Kanban (WCAG 2.4.1). |
+| Card moves are announced | Moving a card by drag or by the Move dropdown shows a toast in a `role="status"` live region, so screen readers say where it went (NFR 1.3). |
+| Reduced motion respected | With `prefers-reduced-motion`, the toast fade and other transitions are turned off. |
 | Header: "+ New Task" top right | The most common action sits where the eye ends a scan of the header, the same spot as Linear and Vercel. |
 
 ---
