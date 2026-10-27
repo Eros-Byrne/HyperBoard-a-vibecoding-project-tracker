@@ -1,4 +1,52 @@
-# Vibecoding Project Tracker — Hackathon Starter
+# HyperBoard
+
+A Kanban project tracker for teams who vibe-code: track tasks through To Do → In Progress → Review → Done, and keep the AI prompts, results and context behind each task so anyone on the team can pick it up.
+
+**Live prototype:** https://hyper-board-a-vibecoding-project-tr.vercel.app/
+
+## Trying it (no sign-up needed)
+
+- Opening the link shows the **Sign in** screen. Click **Use demo account**, then **Sign in**. The demo details are also shown on the screen: team **HyperBoard**, name **Eros Byrne**, password **demo**.
+- The demo team has two members (Eros Byrne and Sam Taylor), one project, two milestones and four example tasks.
+- Use the **Signed in as** dropdown in the header to switch to Sam Taylor's view, and **Sign out** to get back to the sign-in screen. From there you can also create a team, or join one with the code **HYPER1**.
+- Everything is saved in your own browser. To start again from the demo data, clear this site's data in your browser settings.
+
+## What it does
+
+- **Teams and sign-in:** sign in to your team, create or join a team, invite members, pick a team colour, and keep several projects per team.
+- **Kanban board:** add, edit and delete tasks; move them by drag-and-drop or the dropdown on each card.
+- **Task details:** feature / bug type, assignee with one-click hand-off, and due dates that warn as deadlines approach.
+- **Vibe-coding tools:** an AI agent dropdown, a context briefing with a template, a prompt and result log, and a **Copy as Prompt** button that copies everything ready to paste into an AI tool.
+- **Project space:** deliverable links, project notes and milestones with task progress.
+- **Support:** a Contact us form that opens a pre-filled issue on this GitHub repo.
+- **Accessibility:** dark / light mode, high contrast mode, full keyboard use, a "Skip to board" link and screen-reader announcements (WCAG 2.2 AA).
+
+Requirements are in [PRD.md](PRD.md) (§14–§18) and design decisions with their UX principles are in [DESIGN.md](DESIGN.md) (§8).
+
+## Prototype limits
+
+This is a clickable prototype of the full product, built front-end only:
+
+- Data is stored in the browser (localStorage), so it is not shared between devices and there is no real-time sync.
+- The sign-in screen shows how members will access their team, but passwords are not stored or checked, and the "Signed in as" dropdown lets anyone switch member for demo purposes.
+- Contact us hands off to GitHub rather than a support inbox.
+
+## Running it locally
+
+```bash
+npm install
+npm run dev
+```
+
+Then open the URL Vite prints (usually `http://localhost:5173`).
+
+## AI use
+
+AI was used to build this prototype, as permitted for the CM6312 prototype. I used **Claude Code (Claude Opus 5.5)** in VS Code to generate most of the code from my prompts; I chose the features, design and requirements, and reviewed and tested the results.
+
+---
+
+## Hackathon starter notes
 
 You're forking this repo as the starting point for the **UXD Vibecoding Hackathon 2026**. The goal of the hackathon is to ship a Vibecoding Project Tracker in ~3 hours: a Kanban-style tool that tracks your vibecoding tasks and stores the prompts that produced them.
 

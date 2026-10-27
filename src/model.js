@@ -233,12 +233,14 @@ export function newTask({ projectId, assignee, status = 'todo' }) {
 const SEED_TEAM_ID = 'team-demo';
 const SEED_PROJECT_ID = 'project-demo';
 const SEED_USER = 'Eros Byrne';
+const SEED_TEAMMATE = 'Sam Taylor'; // second demo member so hand-off and user switching can be shown
 
 export const SEED_TEAMS = [
-  { id: SEED_TEAM_ID, name: 'HyperBoard', code: 'HYPER1', color: 'indigo', members: [SEED_USER], createdDate: today() },
+  { id: SEED_TEAM_ID, name: 'HyperBoard', code: 'HYPER1', color: 'indigo', members: [SEED_USER, SEED_TEAMMATE], createdDate: today() },
 ];
 
-export const SEED_SESSION = { teamId: SEED_TEAM_ID, projectId: SEED_PROJECT_ID, user: SEED_USER };
+// Shown on the sign-in screen so a first-time visitor can get in without registering.
+export const DEMO_LOGIN = { teamId: SEED_TEAM_ID, name: SEED_USER, password: 'demo' };
 
 export const SEED_PROJECTS = [
   {
@@ -284,6 +286,7 @@ export const SEED_TASKS = [
     description: 'Repro: drag a card, refresh the page.',
     type: 'bug',
     status: 'review',
+    assignee: SEED_TEAMMATE,
     dueDate: addDays(today(), -2),
   }),
   seedTask({

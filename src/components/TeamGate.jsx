@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import { TEAM_COLORS, teamColor } from '../model.js';
+import { LogIn } from 'lucide-react';
+import { TEAM_COLORS, DEMO_LOGIN } from '../model.js';
 import { btnPrimary, btnGhost, input, label } from '../ui.js';
 import Wordmark from './Wordmark.jsx';
 
 /**
- * Entry screen: open an existing team workspace, create a team, or join one with a code.
- * Teams live in this browser's localStorage, so "join" only finds teams created here.
+ * Entry screen (FR 1.1, FR 1.4): sign in to a team, create a team, or join one with a code.
+ * Prototype: teams live in this browser's localStorage and passwords are not stored or checked.
  */
 export default function TeamGate({ teams, onLogin, onCreateTeam, onJoinTeam }) {
-  const [mode, setMode] = useState(teams.length ? 'open' : 'create');
+  const [mode, setMode] = useState(teams.length ? 'signin' : 'create');
 
   const modes = [
-    { id: 'open', label: 'Open workspace', hidden: !teams.length },
+    { id: 'signin', label: 'Sign in', hidden: !teams.length },
     { id: 'create', label: 'Create team' },
     { id: 'join', label: 'Join with code' },
   ].filter((m) => !m.hidden);
@@ -40,59 +41,85 @@ export default function TeamGate({ teams, onLogin, onCreateTeam, onJoinTeam }) {
           ))}
         </div>
 
-        {mode === 'open' && <OpenForm teams={teams} onLogin={onLogin} />}
+        {mode === 'signin' && <SignInForm teams={teams} onLogin={onLogin} />}
         {mode === 'create' && <CreateForm onCreateTeam={onCreateTeam} />}
         {mode === 'join' && <JoinForm onJoinTeam={onJoinTeam} />}
+
+        <p className="mt-6 text-xs text-slate-400">Prototype: passwords are not stored or checked.</p>
       </main>
     </div>
   );
 }
 
-function OpenForm({ teams, onLogin }) {
-  const [teamId, setTeamId] = useState(teams[0].id);
-  const team = teams.find((t) => t.id === teamId);
-  const [user, setUser] = useState(team.members[0]);
+function PasswordField({ id, autoComplete, value, onChange }) {
+  return (
+    <div>
+      <label htmlFor={id} className={label}>Password</label>
+      <input id={id} type="password" autoComplete={autoComplete} className={input} required value={value} onChange={onChange} />
+    </div>
+  );
+}
 
-  function pickTeam(id) {
-    setTeamId(id);
-    setUser(teams.find((t) => t.id === id).members[0]);
+function SignInForm({ teams, onLogin }) {
+  const [teamId, setTeamId] = useState(teams[0].id);
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const demoTeam = teams.find((t) => t.id === DEMO_LOGIN.teamId);
+
+  function signIn(e) {
+    e.preventDefault();
+    const team = teams.find((t) => t.id === teamId);
+    const member = team.members.find((m) => m.toLowerCase() === name.trim().toLowerCase());
+    if (!member) {
+      setError(`"${name.trim()}" isn't a member of ${team.name}. Check the spelling, or join with a code.`);
+      return;
+    }
+    onLogin(team.id, member);
+  }
+
+  function fillDemo() {
+    setTeamId(DEMO_LOGIN.teamId);
+    setName(DEMO_LOGIN.name);
+    setPassword(DEMO_LOGIN.password);
+    setError('');
   }
 
   return (
-    <form
-      className="space-y-4"
-      onSubmit={(e) => {
-        e.preventDefault();
-        onLogin(teamId, user);
-      }}
-    >
-      <fieldset>
-        <legend className={label}>Team</legend>
-        <div className="space-y-2">
-          {teams.map((t) => (
-            <label
-              key={t.id}
-              className={`flex cursor-pointer items-center gap-3 rounded-md border px-3 py-2 text-sm ${
-                t.id === teamId ? 'border-brand-primary' : 'border-slate-700'
-              }`}
-            >
-              <input type="radio" name="team" value={t.id} checked={t.id === teamId} onChange={() => pickTeam(t.id)} />
-              <span className="h-3 w-3 rounded-full" style={{ background: teamColor(t) }} aria-hidden="true" />
-              <span className="font-medium">{t.name}</span>
-              <span className="ml-auto text-xs text-slate-400">{t.members.length} member(s)</span>
-            </label>
-          ))}
+    <form className="space-y-4" onSubmit={signIn}>
+      {demoTeam && (
+        <div className="rounded-md border border-dashed border-slate-700 p-3 text-sm text-slate-300">
+          <p>
+            Just looking? Use the demo account: team <span className="font-medium text-slate-100">{demoTeam.name}</span>, name{' '}
+            <span className="font-medium text-slate-100">{DEMO_LOGIN.name}</span>, password{' '}
+            <span className="font-mono text-slate-100">{DEMO_LOGIN.password}</span>.
+          </p>
+          <button type="button" className={`${btnGhost} mt-2`} onClick={fillDemo}>
+            Use demo account
+          </button>
         </div>
-      </fieldset>
+      )}
       <div>
-        <label htmlFor="open-user" className={label}>Who are you?</label>
-        <select id="open-user" className={input} value={user} onChange={(e) => setUser(e.target.value)}>
-          {team.members.map((m) => (
-            <option key={m}>{m}</option>
+        <label htmlFor="signin-team" className={label}>Team</label>
+        <select id="signin-team" className={input} value={teamId} onChange={(e) => setTeamId(e.target.value)}>
+          {teams.map((t) => (
+            <option key={t.id} value={t.id}>{t.name}</option>
           ))}
         </select>
       </div>
-      <button type="submit" className={`${btnPrimary} w-full justify-center`}>Open workspace</button>
+      <div>
+        <label htmlFor="signin-name" className={label}>Your name</label>
+        <input id="signin-name" autoComplete="username" className={input} required value={name} onChange={(e) => setName(e.target.value)} />
+      </div>
+      <PasswordField id="signin-password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      {error && (
+        <p role="alert" className="text-sm text-red-300">
+          {error}
+        </p>
+      )}
+      <button type="submit" className={`${btnPrimary} w-full justify-center`}>
+        <LogIn size={16} aria-hidden="true" /> Sign in
+      </button>
     </form>
   );
 }
@@ -100,6 +127,7 @@ function OpenForm({ teams, onLogin }) {
 function CreateForm({ onCreateTeam }) {
   const [name, setName] = useState('');
   const [user, setUser] = useState('');
+  const [password, setPassword] = useState('');
   const [color, setColor] = useState(TEAM_COLORS[0].id);
 
   return (
@@ -116,8 +144,9 @@ function CreateForm({ onCreateTeam }) {
       </div>
       <div>
         <label htmlFor="create-user" className={label}>Your name</label>
-        <input id="create-user" className={input} required value={user} onChange={(e) => setUser(e.target.value)} />
+        <input id="create-user" autoComplete="username" className={input} required value={user} onChange={(e) => setUser(e.target.value)} />
       </div>
+      <PasswordField id="create-password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       <ColorPicker value={color} onChange={setColor} />
       <button type="submit" className={`${btnPrimary} w-full justify-center`}>Create team</button>
     </form>
@@ -154,6 +183,7 @@ function ColorPicker({ value, onChange }) {
 function JoinForm({ onJoinTeam }) {
   const [code, setCode] = useState('');
   const [user, setUser] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   return (
@@ -181,8 +211,9 @@ function JoinForm({ onJoinTeam }) {
       </div>
       <div>
         <label htmlFor="join-user" className={label}>Your name</label>
-        <input id="join-user" className={input} required value={user} onChange={(e) => setUser(e.target.value)} />
+        <input id="join-user" autoComplete="username" className={input} required value={user} onChange={(e) => setUser(e.target.value)} />
       </div>
+      <PasswordField id="join-password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       {error && (
         <p role="alert" className="text-sm text-red-300">
           {error}

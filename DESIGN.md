@@ -112,22 +112,43 @@ To keep design tight, the following are explicitly not part of `design-done`:
 
 ## 8. Design justification (NFR 2.2)
 
-| Decision | Why |
-|---|---|
-| Dark slate theme (`#0F172A` page, `#1E293B` cards) | Reduces eye strain in long sessions and matches the IDE-like tools in §1. Body text (`#F8FAFC`) and muted text (`#94A3B8`) both pass WCAG AA on cards (5.7:1 or better). |
-| Button fills one shade darker than `brand-primary` (`indigo-600`, hover `violet-600`) | White on `#6366F1` is 4.47:1, just under AA's 4.5:1 for normal text. `indigo-600` gives 6.3:1 and `violet-600` 5.7:1. `brand-primary` itself is kept for focus rings, drop highlights and the large wordmark (4.0:1 on the page, which passes for large text and UI parts). Small accent text uses `violet-300` (7.9:1). |
-| Type shown by stripe + icon + label | Feature vs bug never relies on colour alone, so it works for colour-blind users. |
-| Due state shown by tint + text pill ("Overdue", "Due soon", "On track", "Done") | Same reason: colour is a hint, the text is the information. |
-| "Move to" dropdown on every card, next to drag-and-drop | Cards can be moved with keyboard or screen reader, not only by mouse dragging. |
-| Visible focus ring on every control (2px `brand-primary`) | Full keyboard navigation (NFR 1.2). |
-| Modals trap focus, close on Esc and return focus | Keyboard and screen reader users never get lost behind the backdrop. |
-| Pre-set team colours (400-level shades) | Every option is 5.9:1 or better on the dark background, so team names in their colour pass AA. Custom HEX can come later (FR 1.4). |
-| "Dark mode" toggle, left of "High contrast" | Dark suits long sessions; light suits bright rooms and people who read better with dark text on light. Follows the OS setting (`prefers-color-scheme`) until the viewer picks, then remembers it. Built from CSS variables, so every component works in both. Light palette: page `#F8FAFC`, cards white, body text `#0F172A` (17:1), muted text `#475569` (7.2:1), placeholders `#64748B` (4.5:1); accent texts switch to their 700/800 shades (4.8:1 or better); team names use the 700 shade of the team colour (4.8:1 or better). |
-| "High contrast" toggle, left of "+ New Task" | For low-vision users. Works in both themes. Dark: black surfaces, white text and borders, yellow (`#FFE600`, 16.6:1) actions, links and focus rings. Light: white surfaces, black text and borders, dark blue (`#1E3A8A`, 10.4:1) actions, links and focus rings. Starts on if the OS asks for more contrast (`prefers-contrast: more`), then remembers the viewer's choice. Both toggles use `aria-pressed`. |
-| "Skip to board" link as the first Tab stop | Keyboard users can jump past the header, deliverables and notes straight to the Kanban (WCAG 2.4.1). |
-| Card moves are announced | Moving a card by drag or by the Move dropdown shows a toast in a `role="status"` live region, so screen readers say where it went (NFR 1.3). |
-| Reduced motion respected | With `prefers-reduced-motion`, the toast fade and other transitions are turned off. |
-| Header: "+ New Task" top right | The most common action sits where the eye ends a scan of the header, the same spot as Linear and Vercel. |
+Each decision names the UX principle it follows. **WCAG x.x.x** = a WCAG 2.2 success criterion [1]. **H1–H10** = Nielsen's 10 usability heuristics [2].
+
+| Decision | Why | Principle / source |
+|---|---|---|
+| Dark slate theme (`#0F172A` page, `#1E293B` cards) | Reduces eye strain in long sessions and matches the IDE-like tools in §1. Body text (`#F8FAFC`) and muted text (`#94A3B8`) both pass WCAG AA on cards (5.7:1 or better). | H8 Aesthetic and minimalist design; WCAG 1.4.3 Contrast (Minimum) |
+| Button fills one shade darker than `brand-primary` (`indigo-600`, hover `violet-600`) | White on `#6366F1` is 4.47:1, just under AA's 4.5:1 for normal text. `indigo-600` gives 6.3:1 and `violet-600` 5.7:1. `brand-primary` itself is kept for focus rings, drop highlights and the large wordmark (4.0:1 on the page, which passes for large text and UI parts). Small accent text uses `violet-300` (7.9:1). | WCAG 1.4.3 Contrast (Minimum) |
+| Input and dropdown borders at 3:1 or more | Form fields stay visible against cards in both themes (4.8:1 light, 3.0:1 dark). | WCAG 1.4.11 Non-text Contrast |
+| Type shown by stripe + icon + label | Feature vs bug never relies on colour alone, so it works for colour-blind users. | WCAG 1.4.1 Use of Color |
+| Due state shown by tint + text pill ("Overdue", "Due soon", "On track", "Done") | Colour is a hint, the text is the information, and users see at a glance which tasks need attention. | WCAG 1.4.1 Use of Color; H1 Visibility of system status |
+| Four columns with familiar labels (To Do → Done) | Matches how developers already think about work moving from start to finish, so there is nothing new to learn. | H2 Match between system and the real world |
+| "Move to" dropdown on every card, next to drag-and-drop | Cards can be moved with a keyboard, screen reader or single click, not only by dragging. Experts drag; everyone can use the dropdown. | WCAG 2.5.7 Dragging Movements; WCAG 2.1.1 Keyboard; H7 Flexibility and efficiency of use |
+| Visible focus ring on every control (2px `brand-primary`) | Full keyboard navigation (NFR 1.2). | WCAG 2.4.7 Focus Visible |
+| "Skip to board" link as the first Tab stop | Keyboard users can jump past the header, deliverables and notes straight to the Kanban. | WCAG 2.4.1 Bypass Blocks |
+| Every field and icon button has a label or `aria-label` | Screen readers announce what each control is and does (NFR 1.3). | WCAG 1.3.1 Info and Relationships; WCAG 4.1.2 Name, Role, Value |
+| Modals trap focus, close on Esc and return focus | Keyboard and screen reader users never get lost behind the backdrop, and can always back out with Esc or Cancel. | WCAG 2.1.2 No Keyboard Trap; H3 User control and freedom |
+| Toasts confirm actions ("Task assigned to {name}.", "Prompt copied. Ready to paste.", card moves) | Users always know an action worked. The toast is a `role="status"` live region, so screen readers announce it too. | H1 Visibility of system status; WCAG 4.1.3 Status Messages |
+| Delete asks for confirmation; task titles are required | Stops a task being lost by a mis-click, or saved with no name. | H5 Error prevention |
+| Sign-in and join-code errors in plain words (e.g. "'Sam' isn't a member of HyperBoard. Check the spelling, or join with a code.") | Tells the user exactly what went wrong and how to fix it, and is announced to screen readers (`role="alert"`). | H9 Help users recognize, diagnose, and recover from errors; WCAG 3.3.1 Error Identification |
+| Sign-in screen shows the demo account details, with a "Use demo account" button | First-time visitors can try every feature in one click without registering, and do not have to remember or guess any details. | H6 Recognition rather than recall; H7 Flexibility and efficiency of use |
+| Name and password fields use `autocomplete` (`username`, `current-password`, `new-password`) and allow pasting | Browsers and password managers can fill them in, so signing in never depends on memorising or retyping a password. | WCAG 1.3.5 Identify Input Purpose; WCAG 3.3.8 Accessible Authentication (Minimum) |
+| "Signed in as" dropdown in the header | The current member is always visible, and switching member is one click (prototype: shows each member's view without signing out). | H1 Visibility of system status; H7 Flexibility and efficiency of use |
+| Dropdowns for assignee, AI agent, column and team colour; "Insert briefing template" button | Users pick from a list instead of remembering names or typing them correctly. | H6 Recognition rather than recall |
+| Pre-set team colours (400-level shades) | Every option is 5.9:1 or better on the dark background, so team names in their colour pass AA. Users cannot choose an unreadable colour. Custom HEX can come later (NFR 5.1). | WCAG 1.4.3 Contrast (Minimum); H5 Error prevention |
+| Header: "+ New Task" top right, wordmark top left | Same layout as tools developers already use (Linear, Vercel), so they know where to look. | H4 Consistency and standards; Jakob's Law [3] |
+| Clicking the wordmark goes "home" (back to the top of the board) | Users expect the logo in the top left to take them home, so there is always a quick way back from anywhere on the page. | H3 User control and freedom; Jakob's Law [3] |
+| Contact us button in the header on every screen | Help is always one click away from the workspace (FR 4.1). | H10 Help and documentation |
+| "Dark mode" toggle, left of "High contrast" | Dark suits long sessions; light suits bright rooms and people who read better with dark text on light. Follows the OS setting (`prefers-color-scheme`) until the viewer picks, then remembers it. Built from CSS variables, so every component works in both. Light palette: page `#F8FAFC`, cards white, body text `#0F172A` (17:1), muted text `#475569` (7.2:1), placeholders `#64748B` (4.5:1); accent texts switch to their 700/800 shades (4.8:1 or better); team names use the 700 shade of the team colour (4.8:1 or better). | H7 Flexibility and efficiency of use; WCAG 1.4.3 Contrast (Minimum) |
+| "High contrast" toggle, left of "+ New Task" | For low-vision users. Works in both themes. Dark: black surfaces, white text and borders, yellow (`#FFE600`, 16.6:1) actions, links and focus rings. Light: white surfaces, black text and borders, dark blue (`#1E3A8A`, 10.4:1) actions, links and focus rings. Starts on if the OS asks for more contrast (`prefers-contrast: more`), then remembers the viewer's choice. Both toggles use `aria-pressed`. | WCAG 1.4.6 Contrast (Enhanced, AAA) |
+| Reduced motion respected | With `prefers-reduced-motion`, the toast fade and other transitions are turned off. | WCAG 2.3.3 Animation from Interactions (AAA) |
+
+### References
+
+[1] W3C (2023) *Web Content Accessibility Guidelines (WCAG) 2.2*. Available at: https://www.w3.org/TR/WCAG22/
+
+[2] Nielsen, J. (1994, updated 2024) *10 Usability Heuristics for User Interface Design*. Nielsen Norman Group. Available at: https://www.nngroup.com/articles/ten-usability-heuristics/
+
+[3] Yablonski, J. *Jakob's Law*. Laws of UX. Available at: https://lawsofux.com/jakobs-law/
 
 ---
 

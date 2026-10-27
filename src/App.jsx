@@ -6,7 +6,6 @@ import {
   SEED_PROJECTS,
   SEED_MILESTONES,
   SEED_TASKS,
-  SEED_SESSION,
   newTeam,
   newProject,
   newTask,
@@ -27,7 +26,8 @@ export default function App() {
   const [projects, setProjects] = useLocalStorage(STORAGE_KEYS.projects, SEED_PROJECTS);
   const [milestones, setMilestones] = useLocalStorage(STORAGE_KEYS.milestones, SEED_MILESTONES);
   const [tasks, setTasks] = useLocalStorage(STORAGE_KEYS.tasks, SEED_TASKS);
-  const [session, setSession] = useLocalStorage(STORAGE_KEYS.session, SEED_SESSION);
+  // No one is signed in on a first visit, so the sign-in screen shows first (FR 1.4).
+  const [session, setSession] = useLocalStorage(STORAGE_KEYS.session, null);
   const [editing, setEditing] = useState(null); // { task, isNew } while the modal is open
   const [toast, setToast] = useState(null); // { id, message }
   const [contactOpen, setContactOpen] = useState(false);
@@ -171,6 +171,10 @@ export default function App() {
         onNewProject={addProject}
         onChangeColor={(color) => setTeams(teams.map((t) => (t.id === team.id ? { ...t, color } : t)))}
         onLogout={() => setSession(null)}
+        onSwitchUser={(name) => {
+          setSession({ ...session, user: name });
+          notify(`Signed in as ${name}.`);
+        }}
         onNewTask={() => setEditing({ task: newTask({ projectId: project.id, assignee: session.user }), isNew: true })}
         onAddMember={addMember}
         onContact={() => setContactOpen(true)}

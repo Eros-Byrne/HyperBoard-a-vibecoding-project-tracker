@@ -15,7 +15,7 @@ A spreadsheet doesn't solve this. A real project tool (Linear, Jira, Notion) is 
 
 ## 2. Target users
 
-- **Primary:** the team members, for the remaining weeks of the summer semester.
+- **Primary:** software development teams who vibe-code together, from junior to expert developers (Task.md client notes).
 - **Secondary:** future cohorts of vibecoders taking the same class.
 
 We are designing the tool we ourselves will use. The pitch demo is also our first real user test.
@@ -117,7 +117,7 @@ PromptLog = {
 Session = { teamId, projectId, user }   // who is "signed in" to which workspace
 ```
 
-Teams are local to the browser: there are no passwords, and "join with code" only finds teams created in the same browser. A real backend is still out of scope (§12).
+Teams are local to the browser: passwords are asked for on sign-in, create and join but are not stored or checked, and "join with code" only finds teams created in the same browser. A real backend is still out of scope (§12).
 
 ## 6. Tech stack
 
@@ -198,12 +198,13 @@ Fill in:
 
 ## 12. Out of scope (do not build)
 
-- Authentication / accounts.
-- Real GitHub integration.
-- A real backend / shared database.
+The prototype is a clickable, front-end-only representation of the full product (§14–§18). These are **not built for real** in the prototype; where a requirement depends on them, the prototype shows how it will look and work instead:
+
+- Real authentication / secure accounts (the sign-in screen is shown, but passwords are not stored or checked).
+- Real GitHub integration (Contact Us opens a pre-filled GitHub issue page only).
+- A real backend / shared database (data is saved in the browser).
+- Real-time collaboration between devices (see NFR 3.1).
 - Mobile responsive — desktop only is fine.
-- Multi-team support.
-- Real-time collaboration.
 
 ## 13. Definition of done
 
@@ -216,62 +217,98 @@ The hackathon is "done" when all 13 milestone tags are pushed to your repo and v
 ---
 
 ## 14. Functional Requirements 
+Requirements marked (MVP) are needed for the minimum viable product (§17). Requirements without the mark are still in the prototype.
+
 1. Team & Workspace Management
 
-    FR 1.1 Team Creation & Joining: Users must be able to create new teams, invite members, and join existing teams.
+    FR 1.1 Team Creation & Joining (MVP): Users must be able to create new teams, invite members, and join existing teams.
 
-    FR 1.2 Dedicated Team Workspaces: A user must be able to log into a specific team's workspace to collaborate on projects dedicated solely to that group.
+    FR 1.2 Dedicated Team Workspaces (MVP): A user must be able to log into a specific team's workspace to collaborate on projects dedicated solely to that group.
 
-    FR 1.3 Team Customization (Phase 1): Users must be able to color-code their team workspace using a pre-set list of colors.
+    FR 1.3 Team Customization (Phase 1) (MVP): Users must be able to color-code their team workspace using a pre-set list of colors.
 
-    FR 1.4 Customization Extensibility (Future-proofing): The system must be designed to support future custom configuration options, such as HEX code color selection and team photo/avatar uploads.
+    FR 1.4 Sign In & Sign Out (MVP): Members must sign in with their team, name and password before they can see a team's board, and be able to sign out. Prototype note: passwords are not stored or checked, the sign-in screen offers a one-click demo account, and a "Signed in as" dropdown switches between team members to show each member's view.
+
+    FR 1.5 Multiple Projects (MVP): A team must be able to create several projects and switch between them.
 
 2. Task Management (Kanban Board)
 
-    FR 2.1 Kanban Interface: The application must feature a Kanban board where users can create, edit, move, and delete tasks across customizable columns (e.g., To Do, In Progress, Done).
+    FR 2.1 Kanban Interface (MVP): The application must feature a Kanban board where users can create, edit, move, and delete tasks across four columns: To Do, In Progress, Review and Done (§7).
 
-    FR 2.2 Milestone Tracking: Users must be able to define, track, and attach tasks to key project milestones over time.
+    FR 2.2 Milestone Tracking (MVP): Users must be able to define, track, and attach tasks to key project milestones over time.
 
-    FR 2.3 General Project Information: Each project must have a dedicated space to log and pin important high-level information, architecture notes, and goals.
+    FR 2.3 General Project Information (MVP): Each project must have a dedicated space to log and pin important high-level information, architecture notes, and goals.
+
+    FR 2.4 Moving Tasks (MVP): Users must be able to move a task by dragging it to another column or by choosing the column from a dropdown on the card.
+
+    FR 2.5 Task Details: Each task must record a type (feature or bug), an assignee and an optional due date, shown on its card.
+
+    FR 2.6 Task Hand-off: Users must be able to reassign a task to another team member straight from its card, with a confirmation message.
+
+    FR 2.7 Due-Date Warnings: Cards must change colour and show a label (Overdue, Due soon, On track, Done) as their deadline approaches.
+
+    FR 2.8 Deliverables Board: Each project must pin links to its four final deliverables (Presentation, Demo, Report, Documentation) above the board.
 
 3. "Vibe-Coding" Specific Features
 
-    FR 3.1 Prompt & Result Logging: Within tasks or project notes, users must have dedicated fields or sections to log successful AI prompts and their corresponding generated results/code snippets for easy team reference.
+    FR 3.1 Prompt & Result Logging (MVP): Within tasks or project notes, users must have dedicated fields or sections to log successful AI prompts and their corresponding generated results/code snippets for easy team reference.
+
+    FR 3.2 AI Agent Selection (MVP): Each task must have a dropdown to record which AI agent was used (Claude, ChatGPT, Cursor, Lovable, Replit or Other).
+
+    FR 3.3 Context Briefing: Each task must have a Context field for a short briefing to the next teammate or AI, with a one-click briefing template and an automatic "last updated" time.
+
+    FR 3.4 Copy as Prompt: One button on each card must copy the task, its context and its prompt log as formatted text ready to paste into an AI tool.
 
 4. Support & Feedback
 
-    FR 4.1 Contact Us Module: The application must include a built-in "Contact Us" or support page allowing users to report bugs, submit issues, or request help directly from the workspace.
+    FR 4.1 Contact Us Module (MVP): The application must include a built-in "Contact Us" or support page allowing users to report bugs, submit issues, or request help directly from the workspace.
+
+5. Display Settings
+
+    FR 5.1 Dark / Light Mode: Users must be able to switch between dark and light mode, and the choice must be remembered.
+
+    FR 5.2 High Contrast Mode: Users must be able to turn on a high contrast mode that works in both dark and light mode.
 
 ## 15. Non-Functional Requirements (NFRs) 
-These requirements define how the system performs, its usability, and its structural qualities.
+These requirements define how the system performs, its usability, and its structural qualities. Requirements marked (MVP) are needed for the MVP (§17).
 
 1. Accessibility (Crucial)
 
-    NFR 1.1 Standards Compliance: The application must meet WCAG (Web Content Accessibility Guidelines) AA standards to ensure it is usable by developers with disabilities.
+    NFR 1.1 Standards Compliance (MVP): The application must meet WCAG (Web Content Accessibility Guidelines) AA standards to ensure it is usable by developers with disabilities.
 
-    NFR 1.2 Navigation: The application must be fully navigable via keyboard, with clear focus states for all interactive elements on the Kanban board.
+    NFR 1.2 Navigation (MVP): The application must be fully navigable via keyboard, with clear focus states for all interactive elements on the Kanban board and a way to skip straight to the board.
 
-    NFR 1.3 Screen Reader Compatibility: UI elements, especially drag-and-drop features on the Kanban board, must have appropriate ARIA labels for screen reader support.
+    NFR 1.3 Screen Reader Compatibility (MVP): UI elements, especially drag-and-drop features on the Kanban board, must have appropriate ARIA labels for screen reader support, and card moves must be announced.
+
+    NFR 1.4 No Colour-Only Information (MVP): Information such as task type and due-date status must never be shown by colour alone; it must also have a text label or icon.
+
+    NFR 1.5 Reduced Motion: Animations must switch off for users whose device asks for reduced motion.
 
 2. Usability & User Experience (UX)
 
     NFR 2.1 Target Audience Flexibility: The interface must be highly intuitive, minimizing the learning curve for junior developers while providing the efficiency and depth required by expert developers.
 
-    NFR 2.2 Design Justification: Since no formal design sheet exists, all UI/UX decisions (e.g., color contrast, button placement, typography) must be documented with justifications proving they enhance workflow and accessibility.
+    NFR 2.2 Design Justification: Since no formal design sheet exists, all UI/UX decisions (e.g., color contrast, button placement, typography) must be documented with justifications proving they enhance workflow and accessibility (see DESIGN.md §8).
 
 3. Performance & Collaboration
 
-    NFR 3.1 Real-Time Syncing: Because the app is designed for team collaboration, updates to the Kanban board (moving a card, adding a prompt) should reflect in real-time or near-real-time for all other team members currently viewing the board.
+    NFR 3.1 Real-Time Syncing: Because the app is designed for team collaboration, updates to the Kanban board (moving a card, adding a prompt) should reflect in real-time or near-real-time for all other team members currently viewing the board. Prototype note: not visible in the prototype, which saves data in the browser; the full build would sync through a shared database.
 
     NFR 3.2 Responsiveness: The UI must respond quickly to interactions (like dragging tasks) to keep up with the fast-paced nature of "vibe-coding."
 
 4. Security & Privacy
 
-    NFR 4.1 Data Isolation: Data, tasks, and logged prompts must be strictly isolated between teams. A user logged into Team A must not be able to access Team B's data unless explicitly invited.
+    NFR 4.1 Data Isolation (MVP): Data, tasks, and logged prompts must be strictly isolated between teams. A user logged into Team A must not be able to access Team B's data unless explicitly invited. Prototype note: shown by each workspace only displaying its own team's projects and tasks; the full build would enforce it on the server.
+
+5. Maintainability
+
+    NFR 5.1 Customization Extensibility (Future-proofing): The system must be designed to support future custom configuration options, such as HEX code color selection and team photo/avatar uploads.
 
 
 ## 16 Design Justification
 The application design prioritizes an intuitive interface that minimizes the learning curve for junior developers while providing the efficiency and depth required by expert developers. Because no formal design sheet exists, all UI/UX decisions (e.g., color contrast, button placement, typography) must be documented with justifications proving they enhance workflow and accessibility.
+
+The full design justification log, with the UX principle and source behind each decision, is in DESIGN.md §8.
 
 Design Justification Log (Examples to build upon):
 
@@ -283,7 +320,7 @@ Design Justification Log (Examples to build upon):
 
 ## 17 Minimum Viable Product (MVP)
 
-(The MVP defines the core features required to launch the initial, functional version of the app to your developers.)
+(The MVP defines the core features required to launch the initial, functional version of the app to your developers. Each MVP requirement is marked (MVP) in §14, §15 and §18.)
 
 1. Basic Team & User Workspaces
 
@@ -291,11 +328,13 @@ Design Justification Log (Examples to build upon):
 
     A user must be able to log into a specific team's workspace to collaborate on projects dedicated solely to that group.
 
+    Users must sign in before seeing a team's board, and be able to create and switch between several projects.
+
     Users must be able to color-code their team workspace using a pre-set list of colors.
 
 2. Core Kanban Board & Project Tracking
 
-    The application must feature a Kanban board where users can create, edit, move, and delete tasks across customizable columns.
+    The application must feature a Kanban board where users can create, edit, move (by drag-and-drop or dropdown), and delete tasks across four columns: To Do, In Progress, Review and Done.
 
     Users must be able to define, track, and attach tasks to key project milestones over time.
 
@@ -307,6 +346,8 @@ Design Justification Log (Examples to build upon):
 
     Within tasks or project notes, users must have dedicated fields or sections to log successful AI prompts and their corresponding generated results/code snippets for easy team reference.
 
+    Each task must have a dropdown to record which AI agent was used.
+
     Each project must have a dedicated space to log and pin important high-level information, architecture notes, and goals.
 
 4. Support & Feedback Mechanism
@@ -317,6 +358,48 @@ Out of Scope for MVP (Future Phases):
 
     Custom configuration options, such as HEX code color selection and team photo/avatar uploads.
 
+## 18 Data Requirements
 
+These requirements define what data the product needs and why, at a high level. In the prototype everything is saved in the browser's localStorage (§6); in the full build it would live in a shared database (see NFR 3.1). Requirements marked (MVP) are needed for the MVP (§17).
+
+1. Team & User Data
+
+    DR 1.1 Teams (MVP): The name, join code, colour and member list of every team, so people can create, join and tell teams apart (FR 1.1, FR 1.3).
+
+    DR 1.2 Members & Sign-in (MVP): Each member's name and sign-in details, so the app knows who is signed in and who tasks can be assigned to (FR 1.2, FR 1.4).
+
+    DR 1.3 Current Session (MVP): Which member, team and project are open on this device, so only that team's data is shown (NFR 4.1).
+
+2. Project Data
+
+    DR 2.1 Projects (MVP): Each project's name and the team it belongs to, so a team's work can be grouped and kept separate (FR 1.5).
+
+    DR 2.2 Project Notes (MVP): Free-text goals, architecture notes and key information for each project (FR 2.3).
+
+    DR 2.3 Milestones (MVP): Each milestone's title, optional due date and whether it has been reached (FR 2.2).
+
+    DR 2.4 Deliverable Links: A link for each of the four final deliverables of a project (FR 2.8).
+
+3. Task Data
+
+    DR 3.1 Tasks (MVP): Each task's id, title, description, column, created date and project, so tasks can be created, edited, moved and deleted (FR 2.1, FR 2.4).
+
+    DR 3.2 Task Details: Each task's type, assignee, due date and milestone, for colour coding, hand-off and due-date warnings (FR 2.5–2.7, FR 2.2).
+
+    DR 3.3 AI Context (MVP): Each task's context briefing, the AI agent used and when the context was last updated (FR 3.2, FR 3.3).
+
+    DR 3.4 Prompt Log (MVP): Each logged prompt's text, result or code snippet, AI tool and time, so the team can reuse prompts that worked (FR 3.1, FR 3.4).
+
+4. Reference & Settings Data
+
+    DR 4.1 Fixed Lists (MVP): The four columns, two task types, six AI agents, six team colours and four deliverable slots, so stored values are always valid and every colour is accessibility-checked (NFR 1.1).
+
+    DR 4.2 Display Preferences: Whether dark or light mode and high contrast are switched on, remembered per device (FR 5.1, FR 5.2).
+
+    DR 4.3 Demo Data (MVP): A sample team with two members, a demo sign-in account, and a project with milestones and tasks, so a first-time visitor can try every feature without registering.
+
+5. Support Data
+
+    DR 5.1 Support Requests (MVP): The category, subject and message of each Contact Us request, plus the team it came from, so problems reach the developers (FR 4.1).
 
 *PRD version: hackathon-starter v1 · maintained by Prof. Dr. Ignacio Alvarez*
